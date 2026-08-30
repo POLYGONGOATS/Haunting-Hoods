@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useGLTF } from '../../utils/useGLTFLocal';
+import { useTexture } from '@react-three/drei';
 import useKTX2 from '../../hooks/useKTX2Local';
 import * as THREE from 'three';
 import useGame from '../../hooks/useGame';
@@ -14,6 +15,9 @@ export default function Bedroom() {
 	const { scene, nodes } = useGLTF('/models/room/bedroom.glb');
 	const { nodes: skullNodes, materials: skullMaterials } = useGLTF(
 		'/models/room/skull.glb'
+	);
+	const characterTexture = useTexture(
+		'/images/haunting-hoods-main-character.png'
 	);
 	const materialRef = useRef();
 	const alternateTutorialRoom = useGame((state) => state.alternateTutorialRoom);

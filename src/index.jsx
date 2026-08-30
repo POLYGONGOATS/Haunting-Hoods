@@ -3,6 +3,7 @@ import './utils/consoleLogger';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import LandingPage from './components/LandingPage';
 import './style.css';
 import BugReport from './components/Interface/BugReport/BugReport';
 import UnsupportedGPU from './components/Interface/UnsupportedGPU';
@@ -123,10 +124,14 @@ class ErrorBoundary extends React.Component {
 }
 
 const root = createRoot(document.querySelector('#root'));
+const isGameRoute = window.location.pathname === '/game';
+document.documentElement.classList.toggle('landing-mode', !isGameRoute);
+document.body.classList.toggle('landing-mode', !isGameRoute);
+document.querySelector('#root').classList.toggle('landing-mode', !isGameRoute);
 root.render(
 	<React.StrictMode>
 		<ErrorBoundary>
-			<App />
+			{isGameRoute ? <App /> : <LandingPage />}
 		</ErrorBoundary>
 	</React.StrictMode>
 );

@@ -6,6 +6,13 @@
 }
 
 .animated-title path {
+	display: none;
+}
+
+.animated-title .game-title-text {
 	stroke: #efd89b;
 	fill: none;
+	font-family: 'Lincoln Road Deco', sans-serif;
+	font-size: 48px;
+	letter-spacing: 2px;
 }

@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import useGame from '../../hooks/useGame';
 import Metal from './Metal';
 import { useControls } from 'leva';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useLoader } from '@react-three/fiber';
 import useLight from '../../hooks/useLight';
 import useProgressiveLoad from '../../hooks/useProgressiveLoad';
 import WoodLightMaterial from '../materials/WoodLightMaterial';
@@ -45,7 +45,10 @@ export default function Reception(props) {
 		{
 			name: 'baked',
 			label: 'Base Textures',
-			texture: useKTX2('/textures/reception/reception_color_etc1s.ktx2'),
+			texture: useLoader(
+				THREE.TextureLoader,
+				'/textures/reception/reception_color.svg'
+			),
 			type: 'map',
 			uvChannel: 0,
 		},
@@ -176,6 +179,10 @@ export default function Reception(props) {
 				materialRef.current.needsUpdate = true;
 			}
 		});
+
+		// Remove the baked color map so the original reception lettering cannot render.
+		materialRef.current.map = null;
+		materialRef.current.needsUpdate = true;
 	}, [loadedItems]);
 
 	useEffect(() => {

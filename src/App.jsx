@@ -18,6 +18,7 @@ import useGridStore from './hooks/useGrid';
 import useLight from './hooks/useLight';
 import PostProcessing from './components/PostProcessing';
 import { probeFirestoreReachability } from './firebase/healthCheck';
+import useWhitelist from './hooks/useWhitelist';
 
 import { Leva, useControls, button } from 'leva';
 
@@ -43,6 +44,7 @@ import Tutorial from './components/Tutorial/Tutorial';
 import Window from './components/Objectives/Window';
 import Bottles from './components/Objectives/Bottles';
 import Bedsheets from './components/Objectives/Bedsheets';
+import WhitelistClue from './components/Objectives/WhitelistClue';
 // Curtains
 import BathroomCurtain from './components/Curtains/BathroomCurtain';
 import RoomCurtain from './components/Curtains/RoomCurtain';
@@ -147,6 +149,10 @@ function App() {
 			cancelled = true;
 		};
 	}, [setFirestoreReachable]);
+
+	useEffect(() => {
+		useWhitelist.getState().init();
+	}, []);
 
 	useEffect(() => {
 		setMasterVolume(masterVolume);
@@ -540,6 +546,7 @@ function App() {
 							positionOffset={2}
 						/>
 						<Bedsheets />
+						<WhitelistClue />
 						<Window />
 						<Bottles />
 					</>

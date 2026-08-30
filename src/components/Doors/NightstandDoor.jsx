@@ -9,6 +9,8 @@ import useGridStore, { CELL_TYPES } from '../../hooks/useGrid';
 import useHiding from '../../hooks/useHiding';
 import { useSpring, a } from '@react-spring/three';
 import useGameplaySettings from '../../hooks/useGameplaySettings';
+import useInterface from '../../hooks/useInterface';
+import DetectionZone from '../DetectionZone';
 
 const tutorialRoomCenter = [2.05, 0.51, 6.28];
 
@@ -31,6 +33,8 @@ export default function NightstandDoor() {
 	);
 	const [gridOffsetX, setGridOffsetX] = useState(0);
 	const roomCount = useGameplaySettings((state) => state.roomCount);
+	const setCursor = useInterface((state) => state.setCursor);
+	const [booksCollected, setBooksCollected] = useState(false);
 
 	const { opacity } = useSpring({
 		opacity: isHidden ? 0.05 : 1,
@@ -86,6 +90,24 @@ export default function NightstandDoor() {
 		setGridOffsetX(roomCount * 29.5 + 10);
 	}, [roomCount]);
 
+	useEffect(() => {
+		const handleBooksPickup = () => {
+			if (!isOpen || booksCollected || useInterface.getState().cursor !== 'clean-books') {
+				return;
+			}
+
+			setBooksCollected(true);
+			setCursor(null);
+			window.alert(
+				'Congratulations! You are the chosen one. Please complete the form.'
+			);
+			window.open('https://forms.google.com/', '_blank', 'noopener,noreferrer');
+		};
+
+		document.addEventListener('progressComplete', handleBooksPickup);
+		return () => document.removeEventListener('progressComplete', handleBooksPickup);
+	}, [booksCollected, isOpen, setCursor]);
+
 	return (
 		<DoorWrapper
 			roomNumber={roomNumber}
@@ -101,6 +123,36 @@ export default function NightstandDoor() {
 			closet
 			tutorialRoomOffset={tutorialRoomCenter}
 			isNightstand={true}
+			staticChildren={
+				isOpen &&
+				!booksCollected && (
+					<>
+						<group position={[0, -0.42, 0.16]} rotation={[0, 0.15, 0]}>
+							<mesh castShadow>
+								<boxGeometry args={[0.5, 0.08, 0.72]} />
+								<meshStandardMaterial color="#6b1d2a" roughness={0.8} />
+							</mesh>
+							<mesh position={[0, 0.07, 0]} castShadow>
+								<boxGeometry args={[0.5, 0.08, 0.72]} />
+								<meshStandardMaterial color="#1d3557" roughness={0.8} />
+							</mesh>
+							<mesh position={[0.02, 0.14, 0]} castShadow>
+								<boxGeometry args={[0.5, 0.08, 0.72]} />
+								<meshStandardMaterial color="#b8860b" roughness={0.8} />
+							</mesh>
+						</group>
+						<DetectionZone
+							name="books"
+							type="clean"
+							position={[0, -0.4, 0.16]}
+							scale={[0.8, 0.5, 0.9]}
+							distance={2}
+							onDetect={() => setCursor('clean-books')}
+							onDetectEnd={() => setCursor(null)}
+						/>
+					</>
+				)
+			}
 		>
 			<group dispose={null}>
 				<a.mesh

@@ -4,8 +4,8 @@
 	"type": "commonjs",
 	"license": "MIT",
 	"main": "electron/main.js",
-	"description": "Skull Hotel Game",
-	"author": "Skull Hotel Team",
+	"description": "Haunting Hoods Game",
+	"author": "Haunting Hoods Team",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
@@ -48,7 +48,7 @@
 	},
 	"build": {
 		"appId": "3739730",
-		"productName": "Skull Hotel",
+		"productName": "Haunting Hoods",
 		"files": [
 			"build/**/*",
 			"electron/**/*",

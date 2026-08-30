@@ -45,10 +45,10 @@ export default function IntegratedGPUWarning({ gpuInfo, onDismiss }) {
 								</li>
 								<li>
 									Click <strong>Browse</strong> and find{' '}
-									<code>Skull Hotel.exe</code>
+									<code>Haunting Hoods.exe</code>
 								</li>
 								<li>
-									Click <strong>Options</strong> next to Skull Hotel
+									Click <strong>Options</strong> next to Haunting Hoods
 								</li>
 								<li>
 									Select <strong>High performance</strong>
@@ -77,7 +77,7 @@ export default function IntegratedGPUWarning({ gpuInfo, onDismiss }) {
 								</li>
 								<li>
 									Click <strong>Add</strong> and select{' '}
-									<code>Skull Hotel.exe</code>
+									<code>Haunting Hoods.exe</code>
 								</li>
 								<li>
 									Set <strong>Preferred graphics processor</strong> to{' '}
@@ -104,7 +104,7 @@ export default function IntegratedGPUWarning({ gpuInfo, onDismiss }) {
 									<strong>Global Graphics</strong>
 								</li>
 								<li>
-									Add <code>Skull Hotel.exe</code> to the list
+									Add <code>Haunting Hoods.exe</code> to the list
 								</li>
 								<li>
 									Set GPU to <strong>High Performance</strong>

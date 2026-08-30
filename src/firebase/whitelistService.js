@@ -1,0 +1,183 @@
+import { db, auth, twitterProvider, isFirebaseConfigured } from './config';
+import {
+	signInWithPopup,
+	signOut,
+	onAuthStateChanged,
+} from 'firebase/auth';
+import {
+	doc,
+	getDoc,
+	setDoc,
+	runTransaction,
+	serverTimestamp,
+} from 'firebase/firestore';
+import {
+	mockSignInWithTwitter,
+	mockSignOut,
+	mockSubscribeToAuthState,
+	mockGetTodayCampaign,
+	mockHasUserClaimedBefore,
+	mockClaimWhitelistSpot,
+} from './whitelistMock';
+
+const CAMPAIGNS_COLLECTION = 'whitelist_campaigns';
+const CLAIMS_COLLECTION = 'whitelist_claims';
+
+/**
+ * Returns today's campaign id in UTC, e.g. "2026-08-29".
+ * Every day automatically becomes a new campaign/clue/slot pool.
+ */
+export const getTodayCampaignId = () => {
+	const now = new Date();
+	const yyyy = now.getUTCFullYear();
+	const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+	const dd = String(now.getUTCDate()).padStart(2, '0');
+	return `${yyyy}-${mm}-${dd}`;
+};
+
+/** Sign in with Twitter/X via Firebase Auth popup (or mock in dev mode). */
+export const signInWithTwitter = async () => {
+	if (!isFirebaseConfigured) return mockSignInWithTwitter();
+	if (!auth || !twitterProvider) {
+		throw new Error('Firebase Auth is not configured');
+	}
+	const result = await signInWithPopup(auth, twitterProvider);
+	return result.user;
+};
+
+export const signOutUser = () => {
+	if (!isFirebaseConfigured) return mockSignOut();
+	return auth ? signOut(auth) : Promise.resolve();
+};
+
+export const subscribeToAuthState = (callback) => {
+	if (!isFirebaseConfigured) return mockSubscribeToAuthState(callback);
+	if (!auth) {
+		// No Firebase project configured yet; report signed-out and no-op.
+		callback(null);
+		return () => {};
+	}
+	return onAuthStateChanged(auth, callback);
+};
+
+/**
+ * Fetches today's campaign document. Expected shape (created manually or via
+ * an admin script in Firestore):
+ * {
+ *   code: 'THE-CODE-PAINTED-ON-THE-WALL',
+ *   slotsTotal: 50,
+ *   claimedCount: 0,
+ *   active: true
+ * }
+ */
+export const getTodayCampaign = async () => {
+	if (!isFirebaseConfigured) return mockGetTodayCampaign();
+	const ref = doc(db, CAMPAIGNS_COLLECTION, getTodayCampaignId());
+	const snap = await getDoc(ref);
+	if (!snap.exists()) return null;
+	return { id: snap.id, ...snap.data() };
+};
+
+/** Has this uid ever claimed a whitelist spot (any day)? */
+export const hasUserClaimedBefore = async (uid) => {
+	if (!isFirebaseConfigured) return mockHasUserClaimedBefore(uid);
+	const ref = doc(db, CLAIMS_COLLECTION, uid);
+	const snap = await getDoc(ref);
+	return snap.exists();
+};
+
+export const CLAIM_ERRORS = {
+	ALREADY_CLAIMED: 'ALREADY_CLAIMED',
+	CAMPAIGN_INACTIVE: 'CAMPAIGN_INACTIVE',
+	SOLD_OUT: 'SOLD_OUT',
+	WRONG_CODE: 'WRONG_CODE',
+	MISSING_WALLET: 'MISSING_WALLET',
+};
+
+/**
+ * Attempts to claim today's whitelist spot for the given user.
+ * Uses a single atomic transaction across both the campaign counter doc and
+ * the user's claim doc so that:
+ *  - a user can never claim twice (claim doc id === uid, created once)
+ *  - slots can never be oversold, even with concurrent claims
+ *
+ * `code` is optional: the wall-clue puzzle path requires it (proof the
+ * player found the painted code), while the bedsheets pickup path omits it
+ * (finishing that objective is itself the proof).
+ */
+export const claimWhitelistSpot = async ({
+	uid,
+	twitterHandle,
+	walletAddress,
+	code,
+}) => {
+	if (!walletAddress || !walletAddress.trim()) {
+		const err = new Error('Wallet address is required');
+		err.code = CLAIM_ERRORS.MISSING_WALLET;
+		throw err;
+	}
+
+	if (!isFirebaseConfigured) {
+		return mockClaimWhitelistSpot({ uid, twitterHandle, walletAddress, code });
+	}
+
+	const campaignId = getTodayCampaignId();
+	const campaignRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
+	const claimRef = doc(db, CLAIMS_COLLECTION, uid);
+
+	return runTransaction(db, async (transaction) => {
+		const [campaignSnap, claimSnap] = await Promise.all([
+			transaction.get(campaignRef),
+			transaction.get(claimRef),
+		]);
+
+		if (claimSnap.exists()) {
+			const err = new Error('You have already claimed a whitelist spot');
+			err.code = CLAIM_ERRORS.ALREADY_CLAIMED;
+			throw err;
+		}
+
+		if (!campaignSnap.exists() || campaignSnap.data().active === false) {
+			const err = new Error('No active whitelist hunt right now');
+			err.code = CLAIM_ERRORS.CAMPAIGN_INACTIVE;
+			throw err;
+		}
+
+		const campaign = campaignSnap.data();
+
+		if (
+			code &&
+			code.trim().toUpperCase() !== String(campaign.code).trim().toUpperCase()
+		) {
+			const err = new Error('Incorrect code');
+			err.code = CLAIM_ERRORS.WRONG_CODE;
+			throw err;
+		}
+
+		const claimedCount = campaign.claimedCount || 0;
+		const slotsTotal = campaign.slotsTotal || 0;
+
+		if (claimedCount >= slotsTotal) {
+			const err = new Error('All whitelist spots for today are gone');
+			err.code = CLAIM_ERRORS.SOLD_OUT;
+			throw err;
+		}
+
+		const claimNumber = claimedCount + 1;
+
+		transaction.set(claimRef, {
+			uid,
+			twitterHandle: twitterHandle || null,
+			walletAddress: walletAddress.trim(),
+			campaignId,
+			claimNumber,
+			createdAt: serverTimestamp(),
+		});
+
+		transaction.update(campaignRef, {
+			claimedCount: claimNumber,
+		});
+
+		return { claimNumber, slotsTotal, campaignId };
+	});
+};

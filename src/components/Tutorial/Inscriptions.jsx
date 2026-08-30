@@ -96,7 +96,7 @@ export default function Inscriptions({ endTitle }) {
 						scale={0.3}
 						material={textMaterial}
 					>
-						Skull Hotel
+						Haunting Hoods
 					</Text>
 				</>
 			) : (

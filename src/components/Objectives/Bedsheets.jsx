@@ -3,6 +3,7 @@ import { useGLTF } from '../../utils/useGLTFLocal';
 import { useFrame, useThree } from '@react-three/fiber';
 import useGame from '../../hooks/useGame';
 import useInterface from '../../hooks/useInterface';
+import useWhitelist from '../../hooks/useWhitelist';
 import usePositionalSound from '../../hooks/usePositionalSound';
 import VolumeAwarePositionalAudio from '../VolumeAwarePositionalAudio';
 import * as THREE from 'three';
@@ -49,6 +50,7 @@ export default function Bedsheets() {
 	const progressConditionsRef = useRef(null);
 
 	const bedsheetsSoundRef = useRef();
+	const openClaimPanel = useWhitelist((state) => state.openClaimPanel);
 
 	const animationMeshClone = useMemo(() => {
 		return nodes.Animated.clone();
@@ -108,6 +110,10 @@ export default function Bedsheets() {
 					});
 					mixerRef.current = mixer;
 					setVisibleMesh('Animated');
+					// Finishing the bedsheets objective is itself the proof of
+					// completion, so open the claim panel without requiring a
+					// wall-clue code — just Twitter connect + wallet address.
+					openClaimPanel(false);
 
 					if (
 						bedsheetsSoundRef.current &&
@@ -149,6 +155,7 @@ export default function Bedsheets() {
 		setCursor,
 		camera,
 		seedData,
+		openClaimPanel,
 	]);
 
 	const isInit = useRef(false);

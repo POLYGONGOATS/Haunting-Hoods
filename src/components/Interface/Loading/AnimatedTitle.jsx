@@ -79,6 +79,14 @@ const AnimatedTitle = ({ onComplete }) => {
 			viewBox="0 0 732 81"
 			fill="none"
 		>
+			<text
+				x="366"
+				y="54"
+				textAnchor="middle"
+				className="game-title-text"
+			>
+				HAUNTING HOODS
+			</text>
 			<path
 				d="M 47.475342,12.361791 C 44.987338,5.0336391 14.309299,-4.010436 7.0200537,15.367756 -5.4295772,48.464646 49.920829,46.625127 41.639535,68.695728 38.042849,78.281309 11.204169,81.430395 3.784338,64.779692"
 				strokeWidth={6.5}

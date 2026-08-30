@@ -16,6 +16,9 @@ html,
 body,
 #root {
 	font-family: 'Lincoln Road Regular', serif !important;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 
 	background: #000;
 	position: fixed;
@@ -28,6 +31,28 @@ body,
 	-webkit-tap-highlight-color: transparent;
 	user-select: none;
 	-webkit-user-select: none;
+}
+
+html {
+	scroll-behavior: smooth;
+	overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+html.landing-mode,
+body.landing-mode,
+#root.landing-mode {
+	position: static;
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+	overflow: visible;
+	touch-action: auto;
 }
 
 .interface {

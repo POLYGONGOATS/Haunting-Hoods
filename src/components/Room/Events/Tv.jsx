@@ -1,5 +1,6 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
 import useGame from '../../../hooks/useGame';
 import useInterface from '../../../hooks/useInterface';
 import useGamepadControls from '../../../hooks/useGamepadControls';
@@ -32,21 +33,36 @@ export default function Tv() {
 	const knockedRooms = useGame((state) => state.knockedRooms);
 	const setTvLight = useLight((state) => state.setTvLight);
 
+	const characterTexture = useTexture(
+		'/images/haunting-hoods-main-character.png'
+	);
+
 	const uniforms = useMemo(
 		() => ({
 			uTime: { value: 0 },
+			uCharacter: { value: characterTexture },
+			uOn: { value: false },
 		}),
-		[]
+		[characterTexture]
 	);
 
 	const redTextMaterial = useMemo(() => {
 		return new THREE.MeshBasicMaterial({ color: '#000' });
 	}, []);
 
+	const tvOnAtRef = useRef(0);
+
 	useFrame((state) => {
 		const { clock } = state;
 		if (meshRef.current) {
-			meshRef.current.material.uniforms.uTime.value = clock.getElapsedTime();
+			// Time since the TV was switched on (not global elapsed time), so the
+			// character reveal always starts predictably shortly after power-on.
+			meshRef.current.material.uniforms.uTime.value =
+				clock.getElapsedTime() - tvOnAtRef.current;
+			meshRef.current.material.uniforms.uOn.value = tv;
+		}
+		if (tv && tvOnAtRef.current === 0) {
+			tvOnAtRef.current = clock.getElapsedTime();
 		}
 	});
 
@@ -57,6 +73,7 @@ export default function Tv() {
 		} else {
 			tvSoundRef.current.pause();
 			setTvLight('#ffffff', 0);
+			tvOnAtRef.current = 0;
 		}
 	}, [tv, setTvLight]);
 
@@ -137,7 +154,7 @@ export default function Tv() {
 				type="power"
 			/>
 			<mesh
-				visible={tv}
+				visible={true}
 				scale={0.087}
 				rotation={[0, Math.PI / 2, 0]}
 				ref={meshRef}
@@ -154,6 +171,8 @@ export default function Tv() {
 				`}
 					fragmentShader={`
 					uniform float uTime;
+					uniform sampler2D uCharacter;
+					uniform bool uOn;
 					varying vec2 vUv;
 					
 					float random(vec2 st) {
@@ -163,8 +182,36 @@ export default function Tv() {
 					void main() {
 						vec2 st = vUv;
 						float noise = random(st + uTime);
-						
-						gl_FragColor = vec4(vec3(noise), 1.0);
+
+						// Fit the (portrait) character image into the (landscape)
+						// screen without stretching, centered, cropping sides.
+						vec2 charUv = st;
+						float screenAspect = 16.0 / 9.0;
+						float charAspect = 768.0 / 894.0;
+						float scale = charAspect / screenAspect;
+						charUv.x = (charUv.x - 0.5) * scale + 0.5;
+						vec3 characterColor = texture2D(uCharacter, charUv).rgb;
+						bool inBounds = charUv.x >= 0.0 && charUv.x <= 1.0;
+
+						if (!uOn) {
+							// TV powered off: show the character dimly, like a framed
+							// photo/portrait rather than an active screen.
+							vec3 offColor = inBounds ? characterColor * 0.55 : vec3(0.05, 0.01, 0.01);
+							gl_FragColor = vec4(offColor, 1.0);
+							return;
+						}
+
+						// He appears in the static a few seconds after power-on, and
+						// keeps reappearing every ~8 seconds as if watching.
+						float cycle = mod(uTime, 8.0);
+						float presence = smoothstep(1.5, 2.2, cycle) * (1.0 - smoothstep(5.0, 5.8, cycle));
+
+						vec3 staticColor = vec3(noise);
+						vec3 finalColor = inBounds
+							? mix(staticColor, characterColor, presence)
+							: staticColor;
+
+						gl_FragColor = vec4(finalColor, 1.0);
 					}
 				`}
 				/>

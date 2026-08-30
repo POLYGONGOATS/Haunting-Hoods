@@ -1,0 +1,148 @@
+.whitelist-panel-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.75);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10000;
+}
+
+.whitelist-panel {
+	position: relative;
+	background: #16090b;
+	border: 1px solid rgba(255, 60, 60, 0.35);
+	border-radius: 8px;
+	padding: 32px;
+	width: 420px;
+	max-width: 90vw;
+	color: #f5e9e9;
+	font-family: inherit;
+}
+
+.whitelist-panel h2 {
+	margin: 0 0 8px;
+	font-size: 22px;
+	color: #ff5b5b;
+	letter-spacing: 0.5px;
+}
+
+.whitelist-panel-close {
+	position: absolute;
+	top: 12px;
+	right: 16px;
+	background: none;
+	border: none;
+	color: #f5e9e9;
+	font-size: 24px;
+	cursor: pointer;
+	line-height: 1;
+}
+
+.whitelist-slots {
+	margin: 0 0 20px;
+	font-size: 14px;
+	color: #d8a9a9;
+}
+
+.whitelist-step {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.whitelist-step-label {
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #c98f8f;
+}
+
+.whitelist-step input {
+	background: #241012;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 4px;
+	padding: 10px 12px;
+	color: #fff;
+	font-size: 15px;
+}
+
+.whitelist-step button {
+	align-self: flex-start;
+	background: #1d9bf0;
+	border: none;
+	border-radius: 4px;
+	padding: 10px 16px;
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.whitelist-connected {
+	font-size: 14px;
+	color: #7cd67c;
+}
+
+.whitelist-error {
+	color: #ff6b6b;
+	font-size: 14px;
+	margin: 8px 0 0;
+}
+
+.whitelist-submit {
+	width: 100%;
+	margin-top: 16px;
+	background: #a51212;
+	border: none;
+	border-radius: 4px;
+	padding: 14px;
+	color: #fff;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+	cursor: pointer;
+}
+
+.whitelist-submit:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.whitelist-success {
+	text-align: center;
+	font-size: 18px;
+	padding: 20px 0;
+}
+
+.whitelist-clue-prompt {
+	position: fixed;
+	bottom: 24px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(20, 5, 5, 0.9);
+	border: 1px solid rgba(255, 60, 60, 0.4);
+	border-radius: 6px;
+	padding: 16px 20px;
+	color: #f5e9e9;
+	text-align: center;
+	z-index: 9000;
+}
+
+.whitelist-clue-prompt code {
+	display: block;
+	font-size: 20px;
+	letter-spacing: 2px;
+	margin: 8px 0;
+	color: #ff5b5b;
+}
+
+.whitelist-clue-prompt button {
+	background: #a51212;
+	border: none;
+	border-radius: 4px;
+	padding: 10px 16px;
+	color: #fff;
+	font-weight: 700;
+	cursor: pointer;
+}

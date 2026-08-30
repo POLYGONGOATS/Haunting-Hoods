@@ -1,8 +1,8 @@
 <div align="center" style="display: flex; justify-content: center; align-items: center; gap: 16px;">
-  <img src="./assets/main.jpg" alt="Skull Hotel" style="margin-bottom: 20px;">
+  <img src="./assets/main.jpg" alt="Haunting Hoods" style="margin-bottom: 20px;">
 </div>
 
-In Skull Hotel, you play as a housekeeper tasked with cleaning 8 hotel rooms. Beware - deadly entities lurk in 50% of these rooms, waiting for your arrival. With 30 potential hiding spots randomly selected in each playthrough, your survival depends on vigilance: scrutinize every corner, listen carefully for unusual sounds, and remain alert at all times. The "guests" of Skull Hotel always leave subtle clues to their presence - spotting these hints is your only chance to survive.
+In Haunting Hoods, you play as a housekeeper tasked with cleaning 8 hotel rooms. Beware - deadly entities lurk in 50% of these rooms, waiting for your arrival. With 30 potential hiding spots randomly selected in each playthrough, your survival depends on vigilance: scrutinize every corner, listen carefully for unusual sounds, and remain alert at all times. The "guests" of Haunting Hoods always leave subtle clues to their presence - spotting these hints is your only chance to survive.
 
 ## Installation
 

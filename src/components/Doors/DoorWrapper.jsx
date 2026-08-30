@@ -13,6 +13,7 @@ const DOOR_SPEED = 0.05;
 
 export default function DoorWrapper({
 	children,
+	staticChildren,
 	roomNumber,
 	isOpen,
 	setOpen,
@@ -329,6 +330,11 @@ export default function DoorWrapper({
 					{children}
 				</group>
 			</group>
+			{staticChildren && (
+				<group position={position} rotation={[0, initialRotationY, 0]}>
+					{staticChildren}
+				</group>
+			)}
 		</group>
 	);
 }

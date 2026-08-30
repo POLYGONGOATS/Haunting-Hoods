@@ -7,7 +7,6 @@ import useLight from '../../../hooks/useLight';
 import useGridStore from '../../../hooks/useGrid';
 import useLocalization from '../../../hooks/useLocalization';
 import SkullHotelLogo from '../Logo';
-import { openStoreLink } from '../../../utils/platform';
 import './EndGameScreen.css';
 import { regenerateData } from '../../../utils/config';
 import {
@@ -92,7 +91,6 @@ const EndGameScreen = () => {
 	const [focusedElement, setFocusedElement] = useState(0);
 	const interactiveElements = useRef([]);
 	const [isRestarting, setIsRestarting] = useState(false);
-	const [showPromoPopup, setShowPromoPopup] = useState(false);
 
 	const { t, currentLanguage } = useLocalization();
 	const restart = useGame((state) => state.restart);
@@ -138,9 +136,6 @@ const EndGameScreen = () => {
 				? Math.floor((gameEndTime - gameStartTime) / 1000)
 				: 0;
 			setCompletionTime(timeTaken);
-			setShowPromoPopup(false);
-			const promoTimer = setTimeout(() => setShowPromoPopup(true), 5000);
-
 			setTimeout(() => {
 				const canvas = document.querySelector('canvas');
 				if (canvas && canvas._reactInternals) {
@@ -155,7 +150,6 @@ const EndGameScreen = () => {
 			}, 200);
 		} else {
 			setIsAnyPopupOpen(false);
-			setShowPromoPopup(false);
 		}
 	}, [
 		isEndScreen,
@@ -524,38 +518,6 @@ const EndGameScreen = () => {
 					: t('ui.endGameScreen.playAgain')}
 			</button>
 
-			{showPromoPopup && (
-				<div className="cross-promo-overlay" onClick={() => setShowPromoPopup(false)}>
-					<div className="cross-promo-popup" onClick={(e) => e.stopPropagation()}>
-						<button className="cross-promo-close" onClick={() => setShowPromoPopup(false)}>&times;</button>
-						<div className="cross-promo-header lincoln-regular">
-							{t('ui.crossPromo.title')}
-						</div>
-						<img
-							className="cross-promo-capsule"
-							src="./sly_apes_capsule.webp"
-							alt="Sly Apes"
-							loading="eager"
-						/>
-						<div className="cross-promo-description lincoln-regular">
-							{t('ui.crossPromo.description')}
-						</div>
-						<a
-							className="cross-promo-cta lincoln-regular"
-							href="https://store.steampowered.com/app/4506220/Sly_Apes/?utm_source=skull_hotel&utm_medium=end_screen&utm_campaign=cross_promo"
-							target="_blank"
-							rel="noopener noreferrer"
-							onClick={(e) => {
-								e.stopPropagation();
-								e.preventDefault();
-								openStoreLink(e.currentTarget.href);
-							}}
-						>
-							{t('ui.crossPromo.cta')}
-						</a>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 };
