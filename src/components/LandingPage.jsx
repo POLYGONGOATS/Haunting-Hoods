@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useWhitelist from '../hooks/useWhitelist';
 import WhitelistClaimPanel from './Interface/Whitelist/WhitelistClaimPanel';
 import WhitelistApplication from './Interface/Whitelist/WhitelistApplication';
@@ -22,6 +22,19 @@ const hoods = [
 
 export default function LandingPage() {
 	const openClaimPanel = useWhitelist((state) => state.openClaimPanel);
+	const [showComingSoon, setShowComingSoon] = useState(false);
+
+	const handleComingSoon = (e) => {
+		e.preventDefault();
+		setShowComingSoon(true);
+	};
+
+	useEffect(() => {
+		if (showComingSoon) {
+			const t = setTimeout(() => setShowComingSoon(false), 2800);
+			return () => clearTimeout(t);
+		}
+	}, [showComingSoon]);
 
 	return (
 		<div className="landing-page">
@@ -30,9 +43,9 @@ export default function LandingPage() {
 					<img src="/images/new-logo.png" alt="" /> HAUNTING HOODS
 				</a>
 				<nav className="landing-links">
-					<a href="#story">STORY</a>
+					<a href="#story" onClick={handleComingSoon}>STORY</a>
 					<a href="#" style={{ pointerEvents: 'none', opacity: 0.5 }}>WHITELIST HUNT (COMING SOON)</a>
-					<a href="#roadmap">ROADMAP</a>
+					<a href="#roadmap" onClick={handleComingSoon}>ROADMAP</a>
 				</nav>
 				<button className="menu-button" aria-label="Open menu">☰</button>
 			</header>
@@ -42,7 +55,7 @@ export default function LandingPage() {
 					<div className="hero-copy">
 						<p className="hero-kicker">THE SEAL IS WEAKENING <span>•</span></p>
 						<h1>HAUNTING<br />HOODS</h1>
-						<p className="hero-description">4444 entities were sealed away<br />to keep the balance. They return.</p>
+						<p className="hero-description">4444 entities were sealed away<br />to keep the balance. They will return.</p>
 						<a
 							className="primary-button"
 							style={{ background: '#451717', borderColor: '#ff4d4d', display: 'inline-block', textDecoration: 'none' }}
@@ -74,6 +87,16 @@ export default function LandingPage() {
 				<span>TERMS　　PRIVACY</span>
 			</footer>
 			<WhitelistClaimPanel />
+
+			{showComingSoon && (
+				<div className="coming-soon-overlay" onClick={() => setShowComingSoon(false)}>
+					<div className="coming-soon-modal">
+						<p className="coming-soon-eyebrow">THE SEAL IS NOT READY</p>
+						<h2>COMING SOON</h2>
+						<p>This chapter has not yet been unsealed.</p>
+				</div>
+				</div>
+			)}
 		</div>
 	);
 }
