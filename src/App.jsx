@@ -44,7 +44,6 @@ import Tutorial from './components/Tutorial/Tutorial';
 import Window from './components/Objectives/Window';
 import Bottles from './components/Objectives/Bottles';
 import Bedsheets from './components/Objectives/Bedsheets';
-import WhitelistClue from './components/Objectives/WhitelistClue';
 // Curtains
 import BathroomCurtain from './components/Curtains/BathroomCurtain';
 import RoomCurtain from './components/Curtains/RoomCurtain';
@@ -150,9 +149,6 @@ function App() {
 		};
 	}, [setFirestoreReachable]);
 
-	useEffect(() => {
-		useWhitelist.getState().init();
-	}, []);
 
 	useEffect(() => {
 		setMasterVolume(masterVolume);
@@ -546,7 +542,6 @@ function App() {
 							positionOffset={2}
 						/>
 						<Bedsheets />
-						<WhitelistClue />
 						<Window />
 						<Bottles />
 					</>

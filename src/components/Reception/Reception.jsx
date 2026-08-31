@@ -224,17 +224,6 @@ export default function Reception(props) {
 
 						materialRef.current.userData.uniforms = shader.uniforms;
 
-						shader.fragmentShader =
-							`
-							uniform float uRoughnessIntensity;
-							uniform vec3 uReceptionLight1Color;
-							uniform float uReceptionLight1Intensity;
-							uniform vec3 uReceptionLight2Color;
-							uniform float uReceptionLight2Intensity;
-							uniform vec3 uReceptionLight3Color;
-							uniform float uReceptionLight3Intensity;
-						` + shader.fragmentShader;
-
 						shader.fragmentShader = shader.fragmentShader.replace(
 							'#include <roughnessmap_fragment>',
 							`
@@ -269,7 +258,7 @@ export default function Reception(props) {
 								#else
 									vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
 								#endif
-								`
+							`
 						);
 
 						material.castShadow = true;
@@ -372,6 +361,30 @@ export default function Reception(props) {
 			dispose={null}
 		>
 			<Metal />
+
+			{/* Accent Wall covering the back wall and hiding the engraved text/statue completely */}
+			<mesh position={[-3.55, 2.2, -1.08]} rotation={[0, Math.PI / 2, 0]}>
+				<planeGeometry args={[9.6, 4.5]} />
+				<meshStandardMaterial color="#0a0a0a" roughness={0.9} />
+			</mesh>
+
+			{/* New HOODS PALACE neon sign centered over the desk */}
+			<Text
+				position={[-3.5, 2.65, 0.25]}
+				rotation={[0, Math.PI / 2, 0]}
+				fontSize={0.5}
+				letterSpacing={0.1}
+				anchorX="center"
+				anchorY="middle"
+				color="#ff0000"
+				outlineColor="#ff2200"
+				outlineBlur={0.15}
+				outlineOpacity={receptionLight1.intensity > 0 ? 0.9 : 0}
+				fillOpacity={receptionLight1.intensity > 0 ? 1 : 0}
+			>
+				HOODS PALACE
+			</Text>
+
 			<mesh
 				castShadow
 				receiveShadow

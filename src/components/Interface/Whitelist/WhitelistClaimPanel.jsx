@@ -24,6 +24,7 @@ export default function WhitelistClaimPanel() {
 	const claiming = useWhitelist((state) => state.claiming);
 	const claimError = useWhitelist((state) => state.claimError);
 	const claimResult = useWhitelist((state) => state.claimResult);
+	const alreadyClaimed = useWhitelist((state) => state.alreadyClaimed);
 	const campaign = useWhitelist((state) => state.campaign);
 	const requiresCode = useWhitelist((state) => state.claimPanelRequiresCode);
 	const [code, setCode] = useState('');
@@ -57,6 +58,10 @@ export default function WhitelistClaimPanel() {
 							You are claim #{claimResult.claimNumber} of{' '}
 							{claimResult.slotsTotal} today.
 						</p>
+					</div>
+				) : alreadyClaimed ? (
+					<div className="whitelist-success">
+						<p>You have already claimed your whitelist spot!</p>
 					</div>
 				) : (
 					<>

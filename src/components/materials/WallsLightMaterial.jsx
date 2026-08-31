@@ -60,11 +60,23 @@ export default function WallsLightMaterial({
 				shader.uniforms.uGreenLightIntensity = {
 					value: greenLightIntensity,
 				};
-
 				material.userData.shader = shader;
+
+				shader.vertexShader = `
+					varying vec3 vModelPosition;
+				` + shader.vertexShader;
+
+				shader.vertexShader = shader.vertexShader.replace(
+					'#include <begin_vertex>',
+					`
+					#include <begin_vertex>
+					vModelPosition = position;
+					`
+				);
 
 				shader.fragmentShader =
 					`
+							varying vec3 vModelPosition;
 							uniform float uRoughnessIntensity;
 							uniform vec3 uRedLightColor;
 							uniform float uRedLightIntensity;

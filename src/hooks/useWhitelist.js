@@ -71,6 +71,16 @@ const useWhitelist = create((set, get) => ({
 		set({ user: null, alreadyClaimed: false, claimResult: null });
 	},
 
+	resetDatabase: async () => {
+		const { user } = get();
+		if (user) {
+			const { resetMyClaim } = await import('../firebase/whitelistService');
+			await resetMyClaim(user.uid);
+			set({ alreadyClaimed: false, claimResult: null });
+			get().refreshCampaign();
+		}
+	},
+
 	submitClaim: async (code) => {
 		const { user, walletAddress } = get();
 		if (!user) {

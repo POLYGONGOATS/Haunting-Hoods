@@ -194,10 +194,7 @@ export default function Tv() {
 						bool inBounds = charUv.x >= 0.0 && charUv.x <= 1.0;
 
 						if (!uOn) {
-							// TV powered off: show the character dimly, like a framed
-							// photo/portrait rather than an active screen.
-							vec3 offColor = inBounds ? characterColor * 0.55 : vec3(0.05, 0.01, 0.01);
-							gl_FragColor = vec4(offColor, 1.0);
+							gl_FragColor = vec4(0.05, 0.01, 0.01, 1.0);
 							return;
 						}
 

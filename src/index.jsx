@@ -9,6 +9,9 @@ import BugReport from './components/Interface/BugReport/BugReport';
 import UnsupportedGPU from './components/Interface/UnsupportedGPU';
 import { checkGPUSupport, isWebGLError } from './utils/gpuDetection';
 import { getConsoleMessages } from './utils/consoleLogger';
+import useWhitelist from './hooks/useWhitelist';
+
+useWhitelist.getState().init();
 
 function tryAutoCompatOnce() {
 	try {

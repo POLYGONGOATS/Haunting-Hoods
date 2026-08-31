@@ -11,6 +11,7 @@ const dialogues = [
 	'game.dialogues.turnBack',
 	'game.dialogues.infested',
 	'game.dialogues.bathroomTasks',
+	"Why such a hurry? It's locked now, but won't be locked tomorrow.",
 ];
 
 export default dialogues;

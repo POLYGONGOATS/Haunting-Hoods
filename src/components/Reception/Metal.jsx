@@ -31,6 +31,27 @@ export default function Metal() {
 		}, {});
 	}, [loadedItems, metalParts]);
 
+	// Move any metal pieces on the back wall (X > 3.6) underground to hide the statue
+	// while keeping the desk objects (like the bell and lamps) intact.
+	React.useEffect(() => {
+		[nodes.Frame, nodes.Gold, nodes.Metal, nodes.Eyes].forEach((node) => {
+			if (!node || !node.geometry) return;
+			const positions = node.geometry.attributes.position;
+			let changed = false;
+			for (let i = 0; i < positions.count; i++) {
+				const x = positions.getX(i);
+				// The back wall is at X = 3.696
+				if (x > 3.6) {
+					positions.setY(i, -100);
+					changed = true;
+				}
+			}
+			if (changed) {
+				node.geometry.attributes.position.needsUpdate = true;
+			}
+		});
+	}, [nodes]);
+
 	const textMaterial = useMemo(() => {
 		const opacity = receptionLight1.intensity > 0 ? 1 : 0;
 		return new THREE.MeshBasicMaterial({
@@ -71,16 +92,7 @@ export default function Metal() {
 					material={materials.Metal}
 				/>
 			)}
-			{visibleParts.text && (
-				<>
-					<mesh
-						castShadow
-						receiveShadow
-						geometry={nodes.Text.geometry}
-						material={textMaterial}
-					/>
-				</>
-			)}
+			{/* The original SKULL HOTEL text mesh is removed from here */}
 			{visibleParts.exit && (
 				<mesh
 					castShadow

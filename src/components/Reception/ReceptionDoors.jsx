@@ -152,32 +152,6 @@ export default function ReceptionDoors() {
 				isOpen={corridorDoor}
 				setHandlePressed={setCorridorHandle}
 				setOpen={(value) => {
-					if (value) {
-						const objectivesCompleted = doneObjectives >= roomCount / 2;
-
-						if (!objectivesCompleted) {
-							const allTutorialObjectivesCompleted = tutorialObjectives.every(
-								(obj) => obj === true
-							);
-
-							const canOpen =
-								hasEverCompletedTutorial || allTutorialObjectivesCompleted;
-
-							if (!canOpen) {
-								if (currentDialogueIndex !== 0) {
-									setCurrentDialogueIndex(0);
-									setTimeout(() => setCurrentDialogueIndex(null), 3000);
-								}
-								return;
-							}
-						}
-
-						if (!isTutorialCompleted) {
-							setIsTutorialCompleted(true);
-						}
-					} else if (doneObjectives >= roomCount / 2) {
-						return;
-					}
 					setCorridorDoor(value);
 					setPlayerPositionRoom(initialPosition);
 				}}
@@ -193,11 +167,9 @@ export default function ReceptionDoors() {
 					isOpen={tutorialDoor}
 					setHandlePressed={setTutorialHandle}
 					setOpen={(value) => {
-						if (value && hasEverCompletedTutorial && !isTutorialOpen) {
-							resetTutorial();
+						if (value === true) {
+							setCurrentDialogueIndex(12);
 						}
-						setTutorialDoor(value);
-						setPlayerPositionRoom(initialPosition);
 					}}
 					preventPlayerTrapping={true}
 				>

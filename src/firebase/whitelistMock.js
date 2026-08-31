@@ -7,9 +7,9 @@
  * across browsers/users — it exists purely for local UX testing.
  */
 const STORAGE_KEYS = {
-	user: 'mock_whitelist_user',
-	campaign: 'mock_whitelist_campaign',
-	claims: 'mock_whitelist_claims',
+	user: 'mock_whitelist_user_v3',
+	campaign: 'mock_whitelist_campaign_v3',
+	claims: 'mock_whitelist_claims_v3',
 };
 
 const listeners = new Set();

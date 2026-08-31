@@ -81,6 +81,8 @@ export default function RoomDoor({ roomNumber }) {
 		handleRef.current.rotation.z = handleRotationRef.current;
 	});
 
+	const setCurrentDialogueIndex = useInterface((state) => state.setCurrentDialogueIndex);
+
 	return (
 		<DoorWrapper
 			roomNumber={roomNumber}
@@ -90,8 +92,10 @@ export default function RoomDoor({ roomNumber }) {
 				if (isTutorialOpen) {
 					return;
 				}
-				setOpen(roomNumber, value);
-				setPlayerPositionRoom(roomNumber);
+				// Lock the room door and show prompt
+				if (value === true) {
+					setCurrentDialogueIndex(12);
+				}
 			}}
 			setHandlePressed={(value) => setHandlePressed(roomNumber, value)}
 		>
