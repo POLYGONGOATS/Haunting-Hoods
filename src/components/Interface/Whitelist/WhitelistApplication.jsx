@@ -4,9 +4,9 @@ import './WhitelistApplication.css';
 
 const tasks = [
 	{ id: 1, title: 'Follow us', description: '@Haunting_Hoods', action: 'FOLLOW', url: 'https://x.com/Haunting_Hoods' },
-	{ id: 2, title: 'Like the pinned post', description: 'One tap', action: 'LIKE', url: 'https://x.com/Haunting_Hoods/status/2092583036080865364' },
-	{ id: 3, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/Haunting_Hoods/status/2092583036080865364' },
-	{ id: 4, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/Haunting_Hoods/status/2092583036080865364' },
+	{ id: 2, title: 'Like the pinned post', description: 'One tap', action: 'LIKE', url: 'https://x.com/Haunting_Hoods/status/2094390871877878225' },
+	{ id: 3, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/Haunting_Hoods/status/2094390871877878225' },
+	{ id: 4, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/Haunting_Hoods/status/2094390871877878225' },
 ];
 
 export default function WhitelistApplication() {
