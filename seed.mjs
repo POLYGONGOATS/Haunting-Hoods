@@ -15,9 +15,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const seed = async () => {
-    const campaignId = "2026-08-30";
+    const campaignId = "2026-08-31";
     await setDoc(doc(db, "whitelist_campaigns", campaignId), {
-        slotsTotal: 50,
+        slotsTotal: 444,
         claimedCount: 0,
         active: true
     });
