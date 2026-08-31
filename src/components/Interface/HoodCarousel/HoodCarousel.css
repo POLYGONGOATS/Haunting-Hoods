@@ -104,3 +104,22 @@
     background: rgba(40, 40, 40, 0.8);
     transform: scale(1.05);
 }
+
+@media (max-width: 600px) {
+    .hood-carousel-container {
+        height: 300px;
+        perspective: 800px;
+    }
+    .carousel-card {
+        width: 170px;
+        height: 240px;
+    }
+    .carousel-nav {
+        padding: 0 1rem;
+    }
+    .carousel-arrow {
+        width: 2.2rem;
+        height: 2.2rem;
+        font-size: 1.2rem;
+    }
+}

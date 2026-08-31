@@ -60,7 +60,7 @@ export default function LandingPage() {
 					<div className="collection-intro">
 						<p className="eyebrow">THE COLLECTION</p>
 						<h2>EACH HOOD<br />HAS A PAST</h2>
-						<p style={{ textAlign: 'center', color: '#b30000', fontSize: '1.2rem', marginTop: '1.5rem', fontWeight: 600, position: 'relative', left: '-1.5rem' }}>THEIR STORIES WERE SEALED FOR A REASON.</p>
+						<p className="collection-caption" style={{ textAlign: 'center', color: '#b30000', fontSize: '1.2rem', marginTop: '1.5rem', fontWeight: 600 }}>THEIR STORIES WERE SEALED FOR A REASON.</p>
 					</div>
 					<HoodCarousel hoods={hoods} />
 				</section>
