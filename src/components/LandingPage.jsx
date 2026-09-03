@@ -44,7 +44,7 @@ export default function LandingPage() {
 				</a>
 				<nav className="landing-links">
 					<a href="#story" onClick={handleComingSoon}>STORY</a>
-					<a href="#" style={{ pointerEvents: 'none', opacity: 0.5 }}>WHITELIST HUNT (COMING SOON)</a>
+					<a href="#game" onClick={handleComingSoon}>WHITELIST HUNT 🔒</a>
 					<a href="#roadmap" onClick={handleComingSoon}>ROADMAP</a>
 				</nav>
 				<button className="menu-button" aria-label="Open menu">☰</button>
@@ -61,7 +61,7 @@ export default function LandingPage() {
 							style={{ background: '#451717', borderColor: '#ff4d4d', display: 'inline-block', textDecoration: 'none' }}
 							href="#whitelist"
 						>
-							CLAIM WHITELIST <span>✦</span>
+							APPLY FOR WHITELIST <span>✦</span>
 						</a>
 					</div>
 					<div className="hero-art">

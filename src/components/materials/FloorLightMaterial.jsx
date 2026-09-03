@@ -13,6 +13,7 @@ export default function FloorLightMaterial({
 	greenLightIntensity,
 	blueLightColor,
 	blueLightIntensity,
+	baseColor = '#ffffff',
 }) {
 	const materialRef = useRef();
 	const performanceMode = useGame((state) => state.performanceMode);
@@ -33,6 +34,7 @@ export default function FloorLightMaterial({
 			bumpMap: roughnessTexture,
 			bumpScale: 2,
 			onBeforeCompile: (shader) => {
+				shader.uniforms.uBaseColor = { value: new THREE.Color(baseColor).convertSRGBToLinear() };
 				shader.uniforms.uRoughnessIntensity = { value: 0.75 };
 				shader.uniforms.uRedLightColor = {
 					value: new THREE.Color(redLightColor).convertSRGBToLinear(),
@@ -57,6 +59,7 @@ export default function FloorLightMaterial({
 
 				shader.fragmentShader =
 					`
+							uniform vec3 uBaseColor;
 							uniform float uRoughnessIntensity;
 							uniform vec3 uRedLightColor;
 							uniform float uRedLightIntensity;
@@ -93,12 +96,15 @@ export default function FloorLightMaterial({
 												  blueLightIntensity * uBlueLightColor * uBlueLightIntensity +
 												  greenLightIntensity * uGreenLightColor * uGreenLightIntensity;
 								
+								vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+								
 								vec3 outgoingLight = reflectedLight.directDiffuse + 
 												  reflectedLight.indirectDiffuse + 
-												  diffuseColor.rgb * customLights + 
+												  tintedDiffuse * customLights + 
 												  totalSpecular;
 							#else
-								vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+								vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+								vec3 outgoingLight = (totalDiffuse + totalEmissiveRadiance) * uBaseColor + totalSpecular;
 							#endif
 							`
 				);
@@ -118,6 +124,10 @@ export default function FloorLightMaterial({
 			return;
 
 		const { uniforms } = materialRef.current.userData.shader;
+
+		if (uniforms.uBaseColor) {
+			uniforms.uBaseColor.value = new THREE.Color(baseColor).convertSRGBToLinear();
+		}
 
 		if (uniforms.uRedLightColor) {
 			uniforms.uRedLightColor.value = new THREE.Color(
@@ -150,6 +160,7 @@ export default function FloorLightMaterial({
 		blueLightIntensity,
 		greenLightColor,
 		greenLightIntensity,
+		baseColor,
 	]);
 
 	useEffect(() => {

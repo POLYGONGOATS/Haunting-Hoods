@@ -14,6 +14,7 @@ export default function WallsLightMaterial({
 	blueLightColor,
 	blueLightIntensity,
 	uvScale = 1,
+	baseColor = '#ffffff',
 }) {
 	const materialRef = useRef();
 	const performanceMode = useGame((state) => state.performanceMode);
@@ -41,6 +42,7 @@ export default function WallsLightMaterial({
 			bumpMap: roughnessTexture,
 			bumpScale: 3,
 			onBeforeCompile: (shader) => {
+				shader.uniforms.uBaseColor = { value: new THREE.Color(baseColor).convertSRGBToLinear() };
 				shader.uniforms.uRoughnessIntensity = { value: 0.75 };
 				shader.uniforms.uRedLightColor = {
 					value: new THREE.Color(redLightColor).convertSRGBToLinear(),
@@ -77,6 +79,7 @@ export default function WallsLightMaterial({
 				shader.fragmentShader =
 					`
 							varying vec3 vModelPosition;
+							uniform vec3 uBaseColor;
 							uniform float uRoughnessIntensity;
 							uniform vec3 uRedLightColor;
 							uniform float uRedLightIntensity;
@@ -113,12 +116,15 @@ export default function WallsLightMaterial({
 												  blueLightIntensity * uBlueLightColor * uBlueLightIntensity +
 												  greenLightIntensity * uGreenLightColor * uGreenLightIntensity;
 								
+								vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+								
 								vec3 outgoingLight = reflectedLight.directDiffuse + 
 												  reflectedLight.indirectDiffuse + 
-												  diffuseColor.rgb * customLights + 
+												  tintedDiffuse * customLights + 
 												  totalSpecular;
 							#else
-								vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+								vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+								vec3 outgoingLight = (totalDiffuse + totalEmissiveRadiance) * uBaseColor + totalSpecular;
 							#endif
 							`
 				);
@@ -138,6 +144,10 @@ export default function WallsLightMaterial({
 			return;
 
 		const { uniforms } = materialRef.current.userData.shader;
+
+		if (uniforms.uBaseColor) {
+			uniforms.uBaseColor.value = new THREE.Color(baseColor).convertSRGBToLinear();
+		}
 
 		if (uniforms.uRedLightColor) {
 			uniforms.uRedLightColor.value = new THREE.Color(
@@ -170,6 +180,7 @@ export default function WallsLightMaterial({
 		blueLightIntensity,
 		greenLightColor,
 		greenLightIntensity,
+		baseColor,
 	]);
 
 	useEffect(() => {

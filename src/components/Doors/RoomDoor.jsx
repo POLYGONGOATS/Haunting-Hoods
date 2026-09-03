@@ -92,10 +92,8 @@ export default function RoomDoor({ roomNumber }) {
 				if (isTutorialOpen) {
 					return;
 				}
-				// Lock the room door and show prompt
-				if (value === true) {
-					setCurrentDialogueIndex(12);
-				}
+				setOpen(roomNumber, value);
+				setPlayerPositionRoom(roomNumber);
 			}}
 			setHandlePressed={(value) => setHandlePressed(roomNumber, value)}
 		>

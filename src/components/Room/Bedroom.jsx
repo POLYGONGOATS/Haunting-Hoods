@@ -10,6 +10,7 @@ import useProgressiveLoad from '../../hooks/useProgressiveLoad';
 import FloorLightMaterial from '../materials/FloorLightMaterial';
 import WallsLightMaterial from '../materials/WallsLightMaterial';
 import WoodLightMaterial from '../materials/WoodLightMaterial';
+import { getRoomStyle } from '../../utils/roomStyles';
 
 export default function Bedroom() {
 	const { scene, nodes } = useGLTF('/models/room/bedroom.glb');
@@ -22,6 +23,8 @@ export default function Bedroom() {
 	const materialRef = useRef();
 	const alternateTutorialRoom = useGame((state) => state.alternateTutorialRoom);
 	const isTutorialOpen = useGame((state) => state.isTutorialOpen);
+	const playerPositionRoom = useGame((state) => state.playerPositionRoom);
+	const roomStyle = getRoomStyle(playerPositionRoom);
 
 	const textureParts = [
 		{
@@ -71,6 +74,7 @@ export default function Bedroom() {
 					lightMapIntensity: 0,
 					roughness: 1,
 					onBeforeCompile: (shader) => {
+						shader.uniforms.uBaseColor = { value: new THREE.Color('#ffffff') };
 						shader.uniforms.uRoughnessIntensity = { value: 0.75 };
 						shader.uniforms.uLeftLightColor = {
 							value: new THREE.Color(leftLight.color).convertSRGBToLinear(),
@@ -95,6 +99,7 @@ export default function Bedroom() {
 
 						shader.fragmentShader =
 							`
+							uniform vec3 uBaseColor;
 							uniform float uRoughnessIntensity;
 							uniform vec3 uLeftLightColor;
 							uniform float uLeftLightIntensity;
@@ -134,12 +139,15 @@ export default function Bedroom() {
 																   radioLightIntensity * uRadioLightColor * uRadioLightIntensity +
 																   rightLightIntensity * uRightLightColor * uRightLightIntensity;
 										
+										vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+										
 										vec3 outgoingLight = reflectedLight.directDiffuse + 
 																	reflectedLight.indirectDiffuse + 
-																	diffuseColor.rgb * customLights + 
+																	tintedDiffuse * customLights + 
 																	totalSpecular;
 									#else
-										vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+										vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+										vec3 outgoingLight = (totalDiffuse + totalEmissiveRadiance) * uBaseColor + totalSpecular;
 									#endif
 									`
 							);
@@ -186,6 +194,7 @@ export default function Bedroom() {
 	useEffect(() => {
 		if (materialRef.current?.userData.uniforms) {
 			const uniforms = materialRef.current.userData.uniforms;
+			uniforms.uBaseColor.value = new THREE.Color(roomStyle.wallColor).convertSRGBToLinear();
 			uniforms.uLeftLightColor.value = new THREE.Color(
 				leftLight.color
 			).convertSRGBToLinear();
@@ -200,7 +209,7 @@ export default function Bedroom() {
 			uniforms.uRightLightIntensity.value = rightLight.intensity;
 			materialRef.current.needsUpdate = true;
 		}
-	}, [leftLight, radioLight, rightLight]);
+	}, [leftLight, radioLight, rightLight, roomStyle.wallColor]);
 
 	useControls(
 		'Bedroom Lights',
@@ -284,6 +293,7 @@ export default function Bedroom() {
 				blueLightColor={rightLight.color}
 				blueLightIntensity={rightLight.intensity}
 				uvScale={20}
+				baseColor={roomStyle.woodColor}
 			/>
 
 			<FloorLightMaterial
@@ -295,6 +305,7 @@ export default function Bedroom() {
 				greenLightIntensity={radioLight.intensity}
 				blueLightColor={rightLight.color}
 				blueLightIntensity={rightLight.intensity}
+				baseColor={roomStyle.floorColor}
 			/>
 
 			<WallsLightMaterial
@@ -307,6 +318,7 @@ export default function Bedroom() {
 				blueLightColor={rightLight.color}
 				blueLightIntensity={rightLight.intensity}
 				uvScale={10}
+				baseColor={roomStyle.wallColor}
 			/>
 		</>
 	);

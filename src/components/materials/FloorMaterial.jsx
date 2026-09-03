@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import useKTX2 from '../../hooks/useKTX2Local';
 import * as THREE from 'three';
 
-export default function FloorMaterial({ transparent = false } = {}) {
+export default function FloorMaterial({ baseColor = '#ffffff', transparent = false } = {}) {
 	const [colorMap, roughnessMap] = [
 		useKTX2('/textures/floor/floor_color_etc1s.ktx2'),
 		useKTX2('/textures/floor/floor_roughness_etc1s.ktx2'),
@@ -21,6 +21,7 @@ export default function FloorMaterial({ transparent = false } = {}) {
 			transparent: transparent,
 			opacity: 1,
 			bumpMap: roughnessMap,
+			color: new THREE.Color(baseColor).convertSRGBToLinear(),
 		});
 
 		material.onBeforeCompile = (shader) => {
@@ -46,7 +47,7 @@ export default function FloorMaterial({ transparent = false } = {}) {
 		material.needsUpdate = true;
 
 		return material;
-	}, [colorMap, roughnessMap, transparent]);
+	}, [colorMap, roughnessMap, transparent, baseColor]);
 
 	return () => floorMaterial.clone();
 }

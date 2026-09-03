@@ -28,11 +28,7 @@ const writeJSON = (key, value) => {
 };
 
 const getTodayCampaignId = () => {
-	const now = new Date();
-	const yyyy = now.getUTCFullYear();
-	const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
-	const dd = String(now.getUTCDate()).padStart(2, '0');
-	return `${yyyy}-${mm}-${dd}`;
+	return 'active-campaign';
 };
 
 /** Ensures a default "today" campaign exists so the flow is testable out of the box. */

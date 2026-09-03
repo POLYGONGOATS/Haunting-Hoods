@@ -167,9 +167,8 @@ export default function ReceptionDoors() {
 					isOpen={tutorialDoor}
 					setHandlePressed={setTutorialHandle}
 					setOpen={(value) => {
-						if (value === true) {
-							setCurrentDialogueIndex(12);
-						}
+						setTutorialDoor(value);
+						setPlayerPositionRoom(initialPosition);
 					}}
 					preventPlayerTrapping={true}
 				>
@@ -181,14 +180,7 @@ export default function ReceptionDoors() {
 					setHandlePressed={setExitHandle}
 					setOpen={(value) => {
 						if (value) {
-							if (doneObjectives >= roomCount / 2) {
-								setEndAnimationPlaying(true);
-							} else {
-								if (currentDialogueIndex !== 0) {
-									setCurrentDialogueIndex(0);
-									setTimeout(() => setCurrentDialogueIndex(null), 3000);
-								}
-							}
+							setEndAnimationPlaying(true);
 						}
 					}}
 				>

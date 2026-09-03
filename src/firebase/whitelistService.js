@@ -28,11 +28,7 @@ const CLAIMS_COLLECTION = 'whitelist_claims';
  * Every day automatically becomes a new campaign/clue/slot pool.
  */
 export const getTodayCampaignId = () => {
-	const now = new Date();
-	const yyyy = now.getUTCFullYear();
-	const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
-	const dd = String(now.getUTCDate()).padStart(2, '0');
-	return `${yyyy}-${mm}-${dd}`;
+	return 'active-campaign';
 };
 
 /** Sign in with Twitter/X via Firebase Auth popup (or mock in dev mode). */
@@ -74,7 +70,16 @@ export const getTodayCampaign = async () => {
 	if (!isFirebaseConfigured) return mockGetTodayCampaign();
 	const ref = doc(db, CAMPAIGNS_COLLECTION, getTodayCampaignId());
 	const snap = await getDoc(ref);
-	if (!snap.exists()) return null;
+	if (!snap.exists()) {
+		const defaultCampaign = {
+			code: 'HAUNTED',
+			slotsTotal: 1000,
+			claimedCount: 0,
+			active: true,
+		};
+		await setDoc(ref, defaultCampaign);
+		return { id: ref.id, ...defaultCampaign };
+	}
 	return { id: snap.id, ...snap.data() };
 };
 
@@ -137,13 +142,24 @@ export const claimWhitelistSpot = async ({
 			throw err;
 		}
 
-		if (!campaignSnap.exists() || campaignSnap.data().active === false) {
-			const err = new Error('No active whitelist hunt right now');
-			err.code = CLAIM_ERRORS.CAMPAIGN_INACTIVE;
-			throw err;
+		let campaign;
+		if (!campaignSnap.exists()) {
+			campaign = {
+				id: campaignId,
+				code: 'HAUNTED',
+				slotsTotal: 1000,
+				claimedCount: 0,
+				active: true,
+			};
+			transaction.set(campaignRef, campaign);
+		} else {
+			campaign = campaignSnap.data();
+			if (campaign.active === false) {
+				const err = new Error('No active whitelist hunt right now');
+				err.code = CLAIM_ERRORS.CAMPAIGN_INACTIVE;
+				throw err;
+			}
 		}
-
-		const campaign = campaignSnap.data();
 
 		if (
 			code &&

@@ -9,10 +9,13 @@ import useProgressiveLoad from '../../hooks/useProgressiveLoad';
 import FloorLightMaterial from '../materials/FloorLightMaterial';
 import WallsLightMaterial from '../materials/WallsLightMaterial';
 import WoodLightMaterial from '../materials/WoodLightMaterial';
+import { getRoomStyle } from '../../utils/roomStyles';
 
 export default function Livingroom() {
 	const { scene, nodes } = useGLTF('/models/room/livingroom.glb');
 	const performanceMode = useGame((state) => state.performanceMode);
+	const playerPositionRoom = useGame((state) => state.playerPositionRoom);
+	const roomStyle = getRoomStyle(playerPositionRoom);
 	const materialRef = useRef();
 
 	const textureParts = [
@@ -56,6 +59,7 @@ export default function Livingroom() {
 					lightMapIntensity: 0,
 					roughness: 1,
 					onBeforeCompile: (shader) => {
+						shader.uniforms.uBaseColor = { value: new THREE.Color('#ffffff') };
 						shader.uniforms.uRoughnessIntensity = { value: 0.75 };
 						shader.uniforms.uCouchLightColor = {
 							value: new THREE.Color(couchLight.color).convertSRGBToLinear(),
@@ -80,6 +84,7 @@ export default function Livingroom() {
 
 						shader.fragmentShader =
 							`
+							uniform vec3 uBaseColor;
 							uniform float uRoughnessIntensity;
 							uniform vec3 uCouchLightColor;
 							uniform float uCouchLightIntensity;
@@ -116,12 +121,15 @@ export default function Livingroom() {
 												  wallLightIntensity * uWallLightColor * uWallLightIntensity +
 												  tvLightIntensity * uTvLightColor * uTvLightIntensity;
 								
+								vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+								
 								vec3 outgoingLight = reflectedLight.directDiffuse + 
 												  reflectedLight.indirectDiffuse + 
-												  diffuseColor.rgb * customLights + 
+												  tintedDiffuse * customLights + 
 												  totalSpecular;
 							#else
-								vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+								vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+								vec3 outgoingLight = (totalDiffuse + totalEmissiveRadiance) * uBaseColor + totalSpecular;
 							#endif
 							`
 						);
@@ -168,6 +176,7 @@ export default function Livingroom() {
 	useEffect(() => {
 		if (materialRef.current?.userData.shader) {
 			const shader = materialRef.current.userData.shader;
+			shader.uniforms.uBaseColor.value = new THREE.Color(roomStyle.wallColor).convertSRGBToLinear();
 			shader.uniforms.uCouchLightColor.value = new THREE.Color(
 				couchLight.color
 			).convertSRGBToLinear();
@@ -181,7 +190,7 @@ export default function Livingroom() {
 			).convertSRGBToLinear();
 			shader.uniforms.uTvLightIntensity.value = tvLight.intensity;
 		}
-	}, [couchLight, wallLight, tvLight]);
+	}, [couchLight, wallLight, tvLight, roomStyle.wallColor]);
 
 	useControls(
 		'Livingroom Lights',
@@ -246,6 +255,7 @@ export default function Livingroom() {
 				blueLightColor={wallLight.color}
 				blueLightIntensity={wallLight.intensity}
 				uvScale={10}
+				baseColor={roomStyle.woodColor}
 			/>
 
 			<FloorLightMaterial
@@ -257,6 +267,7 @@ export default function Livingroom() {
 				greenLightIntensity={tvLight.intensity}
 				blueLightColor={wallLight.color}
 				blueLightIntensity={wallLight.intensity}
+				baseColor={roomStyle.floorColor}
 			/>
 
 			<WallsLightMaterial
@@ -269,6 +280,7 @@ export default function Livingroom() {
 				blueLightColor={wallLight.color}
 				blueLightIntensity={wallLight.intensity}
 				uvScale={10}
+				baseColor={roomStyle.wallColor}
 			/>
 		</>
 	);

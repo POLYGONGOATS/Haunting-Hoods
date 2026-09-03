@@ -6,10 +6,11 @@ import useGame from '../../hooks/useGame';
 import useProgressiveLoad from '../../hooks/useProgressiveLoad';
 import WallsMaterial from '../../components/materials/WallsMaterial';
 import FloorMaterial from '../../components/materials/FloorMaterial';
+import { getRoomStyle } from '../../utils/roomStyles';
 
-function BathroomTextures({ scene, nodes, materialsRef }) {
-	const wallsMaterial = WallsMaterial();
-	const floorMaterial = FloorMaterial();
+function BathroomTextures({ scene, nodes, materialsRef, roomStyle }) {
+	const wallsMaterial = WallsMaterial({ baseColor: roomStyle.wallColor });
+	const floorMaterial = FloorMaterial({ baseColor: roomStyle.floorColor });
 
 	useEffect(() => {
 		scene.traverse((child) => {
@@ -69,6 +70,8 @@ export default function Bathroom() {
 	const [lightIntensity, setLightIntensity] = useState(0);
 	const timeoutRef = useRef();
 	const bathroomLight = useGame((state) => state.bathroomLight);
+	const playerPositionRoom = useGame((state) => state.playerPositionRoom);
+	const roomStyle = getRoomStyle(playerPositionRoom);
 	const materialsRef = useRef([]);
 
 	const textureParts = [
@@ -136,6 +139,7 @@ export default function Bathroom() {
 					roughness: 1,
 					roughnessMap: null,
 					onBeforeCompile: (shader) => {
+						shader.uniforms.uBaseColor = { value: new THREE.Color('#ffffff') };
 						shader.uniforms.uRoughnessIntensity = { value: 0.75 };
 						shader.uniforms.uBathroomLightIntensity = {
 							value: 0,
@@ -145,6 +149,7 @@ export default function Bathroom() {
 
 						shader.fragmentShader =
 							`
+					uniform vec3 uBaseColor;
 					uniform float uRoughnessIntensity;
 					uniform float uBathroomLightIntensity;
 				` + shader.fragmentShader;
@@ -172,12 +177,15 @@ export default function Bathroom() {
 							
 							vec3 customLights = bathroomLightIntensity * vec3(1.0) * uBathroomLightIntensity;
 							
+							vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+							
 							vec3 outgoingLight = reflectedLight.directDiffuse + 
 													reflectedLight.indirectDiffuse + 
-													diffuseColor.rgb * customLights + 
+													tintedDiffuse * customLights + 
 													totalSpecular;
 						#else
-							vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+							vec3 tintedDiffuse = diffuseColor.rgb * uBaseColor;
+							vec3 outgoingLight = (totalDiffuse + totalEmissiveRadiance) * uBaseColor + totalSpecular;
 						#endif
 						`
 						);
@@ -196,11 +204,12 @@ export default function Bathroom() {
 
 	useEffect(() => {
 		if (materialRef.current?.userData.uniforms) {
+			materialRef.current.userData.uniforms.uBaseColor.value = new THREE.Color(roomStyle.wallColor).convertSRGBToLinear();
 			materialRef.current.userData.uniforms.uBathroomLightIntensity.value =
 				lightIntensity * 2;
 			materialRef.current.needsUpdate = true;
 		}
-	}, [lightIntensity]);
+	}, [lightIntensity, roomStyle.wallColor]);
 
 	useEffect(() => {
 		materialsRef.current.forEach((material) => {
@@ -292,6 +301,7 @@ export default function Bathroom() {
 				scene={scene}
 				nodes={nodes}
 				materialsRef={materialsRef}
+				roomStyle={roomStyle}
 			/>
 		</group>
 	);

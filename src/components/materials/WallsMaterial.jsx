@@ -3,7 +3,7 @@ import useKTX2 from '../../hooks/useKTX2Local';
 import useGame from '../../hooks/useGame';
 import * as THREE from 'three';
 
-export default function WallsMaterial({ transparent = false } = {}) {
+export default function WallsMaterial({ transparent = false, baseColor = '#ffffff' } = {}) {
 	const performanceMode = useGame((state) => state.performanceMode);
 
 	const [colorMap, roughnessMap] = [
@@ -27,6 +27,7 @@ export default function WallsMaterial({ transparent = false } = {}) {
 			opacity: 1,
 			bumpMap: roughnessMap,
 			bumpScale: 1,
+			color: new THREE.Color(baseColor).convertSRGBToLinear(),
 		});
 
 		material.map.wrapS = THREE.RepeatWrapping;
@@ -39,7 +40,7 @@ export default function WallsMaterial({ transparent = false } = {}) {
 		material.needsUpdate = true;
 
 		return material;
-	}, [colorMap, roughnessMap, transparent]);
+	}, [colorMap, roughnessMap, transparent, baseColor]);
 
 	useEffect(() => {
 		wallsMaterial.needsUpdate = true;
