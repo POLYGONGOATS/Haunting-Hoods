@@ -5,8 +5,9 @@ import './WhitelistApplication.css';
 const tasks = [
 	{ id: 1, title: 'Follow us', description: '@Haunting_Hoods', action: 'FOLLOW', url: 'https://x.com/intent/follow?screen_name=Haunting_Hoods' },
 	{ id: 2, title: 'Like the pinned post', description: 'One tap', action: 'LIKE', url: 'https://x.com/intent/like?tweet_id=2095494665466237398' },
-	{ id: 3, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/intent/post?in_reply_to=2095494665466237398' },
-	{ id: 4, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/intent/retweet?tweet_id=2095494665466237398' },
+	{ id: 3, title: 'Repost', description: 'Spread the word', action: 'REPOST', url: 'https://x.com/intent/retweet?tweet_id=2095494665466237398' },
+	{ id: 4, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/intent/post?in_reply_to=2095494665466237398' },
+	{ id: 5, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/intent/retweet?tweet_id=2095494665466237398' },
 ];
 
 export default function WhitelistApplication() {
@@ -53,7 +54,7 @@ export default function WhitelistApplication() {
 				<div className="wl-tasks-section">
 					<div className="wl-tasks-header">
 						<span>TASKS</span>
-						<span className="wl-tasks-count"><span className="highlight">{completedTasks.length}</span> OF 4</span>
+						<span className="wl-tasks-count"><span className="highlight">{completedTasks.length}</span> OF 5</span>
 					</div>
 					
 					<div className="wl-connect-twitter">
@@ -92,7 +93,7 @@ export default function WhitelistApplication() {
 										<h4>{task.title}</h4>
 										<p>{task.description}</p>
 									</div>
-									{task.id === 4 ? (
+									{task.id === 5 ? (
 										<div className="wl-quote-input-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
 											{!isCompleted && user && (
 												<button className="wl-task-btn" onClick={() => window.open(task.url, '_blank', 'noopener,noreferrer')}>QUOTE</button>
@@ -153,10 +154,10 @@ export default function WhitelistApplication() {
 						<input 
 							type="text" 
 							className="wl-address-input" 
-							placeholder={completedTasks.length < 4 ? "Complete tasks first..." : "Submit your ETH address..."} 
+							placeholder={completedTasks.length < 5 ? "Complete tasks first..." : "Submit your ETH address..."} 
 							value={walletAddress}
 							onChange={(e) => setWalletAddress(e.target.value)}
-							disabled={alreadyClaimed || claiming || completedTasks.length < 4 || !user}
+							disabled={alreadyClaimed || claiming || completedTasks.length < 5 || !user}
 						/>
 					</div>
 				</div>
@@ -170,7 +171,7 @@ export default function WhitelistApplication() {
 				) : (
 					<button 
 						className="wl-submit-btn" 
-						disabled={completedTasks.length < 4 || !user || !walletAddress.trim() || claiming}
+						disabled={completedTasks.length < 5 || !user || !walletAddress.trim() || claiming}
 						onClick={() => submitClaim(null)}
 					>
 						{claiming ? 'SUBMITTING...' : 'APPLY FOR WHITELIST'} <span>✦</span>
