@@ -83,7 +83,7 @@ export default function LandingPage() {
 
 			<footer>
 				<span>© 2026 HAUNTING HOODS. ALL RIGHTS RESERVED.</span>
-				<span>X (TWITTER)　　DISCORD　　INSTAGRAM</span>
+				<span><a href="https://x.com/Haunting_Hoods" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}>X (TWITTER)</a></span>
 				<span>TERMS　　PRIVACY</span>
 			</footer>
 			<WhitelistClaimPanel />
