@@ -23,7 +23,6 @@ const hoods = [
 export default function LandingPage() {
 	const openClaimPanel = useWhitelist((state) => state.openClaimPanel);
 	const [showComingSoon, setShowComingSoon] = useState(false);
-	const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
 	const handleComingSoon = (e) => {
 		e.preventDefault();
@@ -45,9 +44,7 @@ export default function LandingPage() {
 				</a>
 				<nav className="landing-links">
 					<a href="#story" onClick={handleComingSoon}>STORY</a>
-					<a href={isLocalhost ? "/game" : "#game"} onClick={isLocalhost ? undefined : handleComingSoon}>
-						WHITELIST HUNT {isLocalhost ? '' : '🔒'}
-					</a>
+					<a href="#game" onClick={handleComingSoon}>WHITELIST HUNT 🔒</a>
 					<a href="#roadmap" onClick={handleComingSoon}>ROADMAP</a>
 				</nav>
 				<button className="menu-button" aria-label="Open menu">☰</button>

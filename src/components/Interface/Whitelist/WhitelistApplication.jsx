@@ -166,7 +166,7 @@ export default function WhitelistApplication() {
 				
 				{alreadyClaimed ? (
 					<button className="wl-submit-btn claimed" disabled>
-						APPLICATION SUBMITTED {claimResult && `(#${claimResult.claimNumber})`} <span>✓</span>
+						APPLICATION SUBMITTED <span>✓</span>
 					</button>
 				) : (
 					<button 
