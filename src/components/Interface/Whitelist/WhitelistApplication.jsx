@@ -12,6 +12,7 @@ const tasks = [
 export default function WhitelistApplication() {
 	const [completedTasks, setCompletedTasks] = useState([]);
 	
+	const {
 		user, 
 		connectTwitter, 
 		walletAddress, 
