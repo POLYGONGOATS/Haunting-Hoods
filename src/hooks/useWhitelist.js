@@ -20,6 +20,8 @@ const useWhitelist = create((set, get) => ({
 	claimError: null,
 	walletAddress: '',
 	setWalletAddress: (value) => set({ walletAddress: value }),
+	quoteTweetLink: '',
+	setQuoteTweetLink: (value) => set({ quoteTweetLink: value }),
 
 	// Set true once the player scratches the paint off the wall in-game.
 	codeRevealed: false,
@@ -68,7 +70,7 @@ const useWhitelist = create((set, get) => ({
 
 	disconnect: async () => {
 		await signOutUser();
-		set({ user: null, alreadyClaimed: false, claimResult: null });
+		set({ user: null, alreadyClaimed: false, claimResult: null, quoteTweetLink: '' });
 	},
 
 	resetDatabase: async () => {
@@ -82,7 +84,7 @@ const useWhitelist = create((set, get) => ({
 	},
 
 	submitClaim: async (code) => {
-		const { user, walletAddress } = get();
+		const { user, walletAddress, quoteTweetLink } = get();
 		if (!user) {
 			set({ claimError: 'NOT_SIGNED_IN' });
 			return;
@@ -94,6 +96,7 @@ const useWhitelist = create((set, get) => ({
 				uid: user.uid,
 				twitterHandle: user.reloadUserInfo?.screenName || user.displayName,
 				walletAddress,
+				quoteTweetLink,
 				code,
 			});
 			set({

@@ -84,6 +84,7 @@ export const mockClaimWhitelistSpot = async ({
 	uid,
 	twitterHandle,
 	walletAddress,
+	quoteTweetLink,
 	code,
 }) => {
 	if (!walletAddress || !walletAddress.trim()) {
@@ -131,6 +132,7 @@ export const mockClaimWhitelistSpot = async ({
 		uid,
 		twitterHandle: twitterHandle || null,
 		walletAddress: walletAddress.trim(),
+		quoteTweetLink: quoteTweetLink ? quoteTweetLink.trim() : null,
 		campaignId: campaign.id,
 		claimNumber,
 		createdAt: Date.now(),

@@ -4,19 +4,20 @@ import './WhitelistApplication.css';
 
 const tasks = [
 	{ id: 1, title: 'Follow us', description: '@Haunting_Hoods', action: 'FOLLOW', url: 'https://x.com/intent/follow?screen_name=Haunting_Hoods' },
-	{ id: 2, title: 'Like the pinned post', description: 'One tap', action: 'LIKE', url: 'https://x.com/intent/like?tweet_id=2094390871877878225' },
-	{ id: 3, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/intent/post?in_reply_to=2094390871877878225' },
-	{ id: 4, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/intent/retweet?tweet_id=2094390871877878225' },
+	{ id: 2, title: 'Like the pinned post', description: 'One tap', action: 'LIKE', url: 'https://x.com/intent/like?tweet_id=2095494665466237398' },
+	{ id: 3, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/intent/post?in_reply_to=2095494665466237398' },
+	{ id: 4, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/intent/retweet?tweet_id=2095494665466237398' },
 ];
 
 export default function WhitelistApplication() {
 	const [completedTasks, setCompletedTasks] = useState([]);
 	
-	const { 
 		user, 
 		connectTwitter, 
 		walletAddress, 
 		setWalletAddress, 
+		quoteTweetLink,
+		setQuoteTweetLink,
 		submitClaim, 
 		claiming, 
 		alreadyClaimed,
@@ -72,6 +73,7 @@ export default function WhitelistApplication() {
 									useWhitelist.getState().disconnect();
 									setCompletedTasks([]);
 									setWalletAddress('');
+									if (setQuoteTweetLink) setQuoteTweetLink('');
 								}}
 								style={{ background: 'none', border: 'none', color: '#ff4d4d', fontSize: '0.6rem', marginTop: '0.5rem', cursor: 'pointer', textDecoration: 'underline' }}
 							>
@@ -89,13 +91,48 @@ export default function WhitelistApplication() {
 										<h4>{task.title}</h4>
 										<p>{task.description}</p>
 									</div>
-									<button 
-										className={`wl-task-btn ${isCompleted ? 'done' : ''}`}
-										onClick={() => handleTaskClick(task.id, task.url)}
-										disabled={isCompleted || !user}
-									>
-										{isCompleted ? 'DONE' : (user ? task.action : 'CONNECT X FIRST')}
-									</button>
+									{task.id === 4 ? (
+										<div className="wl-quote-input-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+											{!isCompleted && user && (
+												<button className="wl-task-btn" onClick={() => window.open(task.url, '_blank', 'noopener,noreferrer')}>QUOTE</button>
+											)}
+											<div style={{ display: 'flex', gap: '0.5rem' }}>
+												<input 
+													type="text" 
+													className="wl-address-input" 
+													style={{ padding: '0.5rem', minWidth: '200px', fontSize: '0.8rem' }}
+													placeholder={user ? "Paste quote link..." : "Connect X first"}
+													value={quoteTweetLink || ''}
+													onChange={(e) => setQuoteTweetLink(e.target.value)}
+													disabled={isCompleted || !user}
+												/>
+												{!isCompleted && user && (
+													<button 
+														className="wl-task-btn" 
+														onClick={() => {
+															if (quoteTweetLink && (quoteTweetLink.includes('x.com/') || quoteTweetLink.includes('twitter.com/'))) {
+																setCompletedTasks([...completedTasks, task.id]);
+															}
+														}}
+														disabled={!quoteTweetLink || !quoteTweetLink.trim()}
+													>
+														VERIFY
+													</button>
+												)}
+												{isCompleted && (
+													<button className="wl-task-btn done" disabled>DONE</button>
+												)}
+											</div>
+										</div>
+									) : (
+										<button 
+											className={`wl-task-btn ${isCompleted ? 'done' : ''}`}
+											onClick={() => handleTaskClick(task.id, task.url)}
+											disabled={isCompleted || !user}
+										>
+											{isCompleted ? 'DONE' : (user ? task.action : 'CONNECT X FIRST')}
+										</button>
+									)}
 								</div>
 							);
 						})}
