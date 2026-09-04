@@ -1,23 +1,18 @@
 import { create } from 'zustand';
 import {
-	signInWithTwitter,
-	signOutUser,
-	subscribeToAuthState,
 	getTodayCampaign,
-	hasUserClaimedBefore,
 	claimWhitelistSpot,
 	CLAIM_ERRORS,
 } from '../firebase/whitelistService';
 
 const useWhitelist = create((set, get) => ({
-	user: null,
-	authLoading: true,
 	campaign: null,
 	campaignLoading: true,
-	alreadyClaimed: false,
 	claiming: false,
 	claimResult: null, // { claimNumber, slotsTotal }
 	claimError: null,
+	twitterHandle: '',
+	setTwitterHandle: (value) => set({ twitterHandle: value }),
 	walletAddress: '',
 	setWalletAddress: (value) => set({ walletAddress: value }),
 	quoteTweetLink: '',
@@ -34,16 +29,6 @@ const useWhitelist = create((set, get) => ({
 	closeClaimPanel: () => set({ isClaimPanelOpen: false }),
 
 	init: () => {
-		subscribeToAuthState(async (user) => {
-			set({ user, authLoading: false });
-			if (user) {
-				const claimed = await hasUserClaimedBefore(user.uid);
-				set({ alreadyClaimed: claimed });
-			} else {
-				set({ alreadyClaimed: false });
-			}
-		});
-
 		get().refreshCampaign();
 	},
 
@@ -58,43 +43,22 @@ const useWhitelist = create((set, get) => ({
 		}
 	},
 
-	connectTwitter: async () => {
-		set({ claimError: null });
-		try {
-			await signInWithTwitter();
-		} catch (error) {
-			console.warn('Twitter sign-in failed:', error);
-			set({ claimError: 'TWITTER_SIGNIN_FAILED' });
-		}
-	},
-
-	disconnect: async () => {
-		await signOutUser();
-		set({ user: null, alreadyClaimed: false, claimResult: null, quoteTweetLink: '' });
-	},
-
 	resetDatabase: async () => {
-		const { user } = get();
-		if (user) {
-			const { resetMyClaim } = await import('../firebase/whitelistService');
-			await resetMyClaim(user.uid);
-			set({ alreadyClaimed: false, claimResult: null });
-			get().refreshCampaign();
-		}
+		set({ claimResult: null });
+		get().refreshCampaign();
 	},
 
 	submitClaim: async (code) => {
-		const { user, walletAddress, quoteTweetLink } = get();
-		if (!user) {
-			set({ claimError: 'NOT_SIGNED_IN' });
+		const { twitterHandle, walletAddress, quoteTweetLink } = get();
+		if (!twitterHandle.trim()) {
+			set({ claimError: 'Twitter handle is required' });
 			return;
 		}
 
 		set({ claiming: true, claimError: null });
 		try {
 			const result = await claimWhitelistSpot({
-				uid: user.uid,
-				twitterHandle: user.reloadUserInfo?.screenName || user.displayName,
+				twitterHandle,
 				walletAddress,
 				quoteTweetLink,
 				code,
@@ -102,11 +66,10 @@ const useWhitelist = create((set, get) => ({
 			set({
 				claiming: false,
 				claimResult: result,
-				alreadyClaimed: true,
 			});
 			get().refreshCampaign();
 		} catch (error) {
-			set({ claiming: false, claimError: error.code || 'UNKNOWN' });
+			set({ claiming: false, claimError: error.code || error.message || 'UNKNOWN' });
 		}
 	},
 }));

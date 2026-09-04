@@ -48,40 +48,10 @@ const ensureDefaultCampaign = () => {
 	return campaign;
 };
 
-export const mockSignInWithTwitter = async () => {
-	// Simulates a Twitter OAuth popup completing instantly with a fake user.
-	const handle = `dev_hunter_${Math.floor(Math.random() * 9999)}`;
-	const user = {
-		uid: `mock-${handle}`,
-		displayName: handle,
-		reloadUserInfo: { screenName: handle },
-	};
-	writeJSON(STORAGE_KEYS.user, user);
-	listeners.forEach((cb) => cb(user));
-	return user;
-};
-
-export const mockSignOut = async () => {
-	localStorage.removeItem(STORAGE_KEYS.user);
-	listeners.forEach((cb) => cb(null));
-};
-
-export const mockSubscribeToAuthState = (callback) => {
-	listeners.add(callback);
-	const user = readJSON(STORAGE_KEYS.user, null);
-	callback(user);
-	return () => listeners.delete(callback);
-};
-
 export const mockGetTodayCampaign = async () => ensureDefaultCampaign();
 
-export const mockHasUserClaimedBefore = async (uid) => {
-	const claims = readJSON(STORAGE_KEYS.claims, {});
-	return Boolean(claims[uid]);
-};
 
 export const mockClaimWhitelistSpot = async ({
-	uid,
 	twitterHandle,
 	walletAddress,
 	quoteTweetLink,
@@ -93,8 +63,10 @@ export const mockClaimWhitelistSpot = async ({
 		throw err;
 	}
 
+	const sanitizedHandle = twitterHandle.replace('@', '').trim().toLowerCase();
+
 	const claims = readJSON(STORAGE_KEYS.claims, {});
-	if (claims[uid]) {
+	if (claims[sanitizedHandle]) {
 		const err = new Error('Already claimed');
 		err.code = 'ALREADY_CLAIMED';
 		throw err;
@@ -128,9 +100,8 @@ export const mockClaimWhitelistSpot = async ({
 	campaign.claimedCount = claimNumber;
 	writeJSON(STORAGE_KEYS.campaign, campaign);
 
-	claims[uid] = {
-		uid,
-		twitterHandle: twitterHandle || null,
+	claims[sanitizedHandle] = {
+		twitterHandle: sanitizedHandle,
 		walletAddress: walletAddress.trim(),
 		quoteTweetLink: quoteTweetLink ? quoteTweetLink.trim() : null,
 		campaignId: campaign.id,

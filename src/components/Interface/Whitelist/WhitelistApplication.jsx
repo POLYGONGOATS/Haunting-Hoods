@@ -14,24 +14,17 @@ export default function WhitelistApplication() {
 	const [completedTasks, setCompletedTasks] = useState([]);
 	
 	const {
-		user, 
-		connectTwitter, 
+		twitterHandle, 
+		setTwitterHandle, 
 		walletAddress, 
 		setWalletAddress, 
 		quoteTweetLink,
 		setQuoteTweetLink,
 		submitClaim, 
 		claiming, 
-		alreadyClaimed,
 		claimResult,
 		claimError
 	} = useWhitelist();
-
-	useEffect(() => {
-		if (alreadyClaimed) {
-			setCompletedTasks(tasks.map(t => t.id));
-		}
-	}, [alreadyClaimed]);
 
 	const handleTaskClick = (id, url) => {
 		if (url) window.open(url, '_blank', 'noopener,noreferrer');
@@ -57,32 +50,7 @@ export default function WhitelistApplication() {
 						<span className="wl-tasks-count"><span className="highlight">{completedTasks.length}</span> OF 5</span>
 					</div>
 					
-					<div className="wl-connect-twitter">
-						<button 
-							className={`wl-connect-btn ${user ? 'connected' : ''}`}
-							onClick={user ? undefined : connectTwitter}
-							disabled={user !== null}
-						>
-							{user 
-								? `CONNECTED: @${user.reloadUserInfo?.screenName || user.displayName || 'USER'}` 
-								: 'CONNECT X (TWITTER)'
-							}
-						</button>
-						{user && (
-							<button 
-								className="wl-disconnect-btn" 
-								onClick={() => {
-									useWhitelist.getState().disconnect();
-									setCompletedTasks([]);
-									setWalletAddress('');
-									if (setQuoteTweetLink) setQuoteTweetLink('');
-								}}
-								style={{ background: 'none', border: 'none', color: '#ff4d4d', fontSize: '0.6rem', marginTop: '0.5rem', cursor: 'pointer', textDecoration: 'underline' }}
-							>
-								SIGN OUT
-							</button>
-						)}
-					</div>
+
 
 					<div className="wl-tasks-list">
 						{tasks.map((task) => {
@@ -95,7 +63,7 @@ export default function WhitelistApplication() {
 									</div>
 									{task.id === 5 ? (
 										<div className="wl-quote-input-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
-											{!isCompleted && user && (
+											{!isCompleted && (
 												<button className="wl-task-btn" onClick={() => window.open(task.url, '_blank', 'noopener,noreferrer')}>QUOTE</button>
 											)}
 											<div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -103,12 +71,12 @@ export default function WhitelistApplication() {
 													type="text" 
 													className="wl-address-input" 
 													style={{ padding: '0.5rem', minWidth: '200px', fontSize: '0.8rem' }}
-													placeholder={user ? "Paste quote link..." : "Connect X first"}
+													placeholder="Paste quote link..."
 													value={quoteTweetLink || ''}
 													onChange={(e) => setQuoteTweetLink(e.target.value)}
-													disabled={isCompleted || !user}
+													disabled={isCompleted}
 												/>
-												{!isCompleted && user && (
+												{!isCompleted && (
 													<button 
 														className="wl-task-btn" 
 														onClick={() => {
@@ -130,9 +98,9 @@ export default function WhitelistApplication() {
 										<button 
 											className={`wl-task-btn ${isCompleted ? 'done' : ''}`}
 											onClick={() => handleTaskClick(task.id, task.url)}
-											disabled={isCompleted || !user}
+											disabled={isCompleted}
 										>
-											{isCompleted ? 'DONE' : (user ? task.action : 'CONNECT X FIRST')}
+											{isCompleted ? 'DONE' : task.action}
 										</button>
 									)}
 								</div>
@@ -148,6 +116,21 @@ export default function WhitelistApplication() {
 					
 					<div className="wl-address-input-group" style={{ marginTop: '0', paddingTop: '0', borderTop: 'none' }}>
 						<div className="wl-address-label">
+							<strong>TWITTER USERNAME</strong>
+							<span>so we can verify your tasks</span>
+						</div>
+						<input 
+							type="text" 
+							className="wl-address-input" 
+							placeholder={completedTasks.length < 5 ? "Complete tasks first..." : "@username"} 
+							value={twitterHandle}
+							onChange={(e) => setTwitterHandle(e.target.value)}
+							disabled={claimResult || claiming || completedTasks.length < 5}
+						/>
+					</div>
+
+					<div className="wl-address-input-group" style={{ borderTop: '1px solid rgba(255, 77, 77, 0.1)', marginTop: '1rem', paddingTop: '1rem' }}>
+						<div className="wl-address-label">
 							<strong>WALLET ADDRESS</strong>
 							<span>where we drop the spoils</span>
 						</div>
@@ -157,21 +140,21 @@ export default function WhitelistApplication() {
 							placeholder={completedTasks.length < 5 ? "Complete tasks first..." : "Submit your ETH address..."} 
 							value={walletAddress}
 							onChange={(e) => setWalletAddress(e.target.value)}
-							disabled={alreadyClaimed || claiming || completedTasks.length < 5 || !user}
+							disabled={claimResult || claiming || completedTasks.length < 5}
 						/>
 					</div>
 				</div>
 
 				{claimError && <div className="wl-error" style={{color: '#ff4d4d', marginTop: '1rem', textAlign: 'center'}}>{claimError}</div>}
 				
-				{alreadyClaimed ? (
+				{claimResult ? (
 					<button className="wl-submit-btn claimed" disabled>
 						APPLICATION SUBMITTED <span>✓</span>
 					</button>
 				) : (
 					<button 
 						className="wl-submit-btn" 
-						disabled={completedTasks.length < 5 || !user || !walletAddress.trim() || claiming}
+						disabled={completedTasks.length < 5 || !twitterHandle.trim() || !walletAddress.trim() || claiming}
 						onClick={() => submitClaim(null)}
 					>
 						{claiming ? 'SUBMITTING...' : 'APPLY FOR WHITELIST'} <span>✦</span>

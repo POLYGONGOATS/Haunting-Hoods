@@ -12,11 +12,7 @@ import {
 	serverTimestamp,
 } from 'firebase/firestore';
 import {
-	mockSignInWithTwitter,
-	mockSignOut,
-	mockSubscribeToAuthState,
 	mockGetTodayCampaign,
-	mockHasUserClaimedBefore,
 	mockClaimWhitelistSpot,
 } from './whitelistMock';
 
@@ -31,30 +27,6 @@ export const getTodayCampaignId = () => {
 	return 'active-campaign';
 };
 
-/** Sign in with Twitter/X via Firebase Auth popup (or mock in dev mode). */
-export const signInWithTwitter = async () => {
-	if (!isFirebaseConfigured) return mockSignInWithTwitter();
-	if (!auth || !twitterProvider) {
-		throw new Error('Firebase Auth is not configured');
-	}
-	const result = await signInWithPopup(auth, twitterProvider);
-	return result.user;
-};
-
-export const signOutUser = () => {
-	if (!isFirebaseConfigured) return mockSignOut();
-	return auth ? signOut(auth) : Promise.resolve();
-};
-
-export const subscribeToAuthState = (callback) => {
-	if (!isFirebaseConfigured) return mockSubscribeToAuthState(callback);
-	if (!auth) {
-		// No Firebase project configured yet; report signed-out and no-op.
-		callback(null);
-		return () => {};
-	}
-	return onAuthStateChanged(auth, callback);
-};
 
 /**
  * Fetches today's campaign document. Expected shape (created manually or via
@@ -83,13 +55,7 @@ export const getTodayCampaign = async () => {
 	return { id: snap.id, ...snap.data() };
 };
 
-/** Has this uid ever claimed a whitelist spot (any day)? */
-export const hasUserClaimedBefore = async (uid) => {
-	if (!isFirebaseConfigured) return mockHasUserClaimedBefore(uid);
-	const ref = doc(db, CLAIMS_COLLECTION, uid);
-	const snap = await getDoc(ref);
-	return snap.exists();
-};
+
 
 export const CLAIM_ERRORS = {
 	ALREADY_CLAIMED: 'ALREADY_CLAIMED',
@@ -111,12 +77,19 @@ export const CLAIM_ERRORS = {
  * (finishing that objective is itself the proof).
  */
 export const claimWhitelistSpot = async ({
-	uid,
 	twitterHandle,
 	walletAddress,
 	quoteTweetLink,
 	code,
 }) => {
+	if (!twitterHandle || !twitterHandle.trim()) {
+		const err = new Error('Twitter handle is required');
+		err.code = 'MISSING_TWITTER';
+		throw err;
+	}
+
+	const sanitizedHandle = twitterHandle.replace('@', '').trim().toLowerCase();
+
 	if (!walletAddress || !walletAddress.trim()) {
 		const err = new Error('Wallet address is required');
 		err.code = CLAIM_ERRORS.MISSING_WALLET;
@@ -124,12 +97,12 @@ export const claimWhitelistSpot = async ({
 	}
 
 	if (!isFirebaseConfigured) {
-		return mockClaimWhitelistSpot({ uid, twitterHandle, walletAddress, quoteTweetLink, code });
+		return mockClaimWhitelistSpot({ twitterHandle: sanitizedHandle, walletAddress, quoteTweetLink, code });
 	}
 
 	const campaignId = getTodayCampaignId();
 	const campaignRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
-	const claimRef = doc(db, CLAIMS_COLLECTION, uid);
+	const claimRef = doc(db, CLAIMS_COLLECTION, sanitizedHandle);
 
 	return runTransaction(db, async (transaction) => {
 		const [campaignSnap, claimSnap] = await Promise.all([
@@ -183,8 +156,7 @@ export const claimWhitelistSpot = async ({
 		const claimNumber = claimedCount + 1;
 
 		transaction.set(claimRef, {
-			uid,
-			twitterHandle: twitterHandle || null,
+			twitterHandle: sanitizedHandle,
 			walletAddress: walletAddress.trim(),
 			quoteTweetLink: quoteTweetLink ? quoteTweetLink.trim() : null,
 			campaignId,
