@@ -133,6 +133,10 @@ export const claimWhitelistSpot = async ({
 				err.code = CLAIM_ERRORS.CAMPAIGN_INACTIVE;
 				throw err;
 			}
+			if (campaign.slotsTotal < 1000) {
+				campaign.slotsTotal = 1000;
+				transaction.update(campaignRef, { slotsTotal: 1000 });
+			}
 		}
 
 		if (

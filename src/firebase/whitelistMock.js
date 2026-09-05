@@ -35,12 +35,18 @@ const getTodayCampaignId = () => {
 const ensureDefaultCampaign = () => {
 	const existing = readJSON(STORAGE_KEYS.campaign, null);
 	const todayId = getTodayCampaignId();
-	if (existing && existing.id === todayId) return existing;
+	if (existing && existing.id === todayId) {
+		if (existing.slotsTotal < 1000) {
+			existing.slotsTotal = 1000;
+			writeJSON(STORAGE_KEYS.campaign, existing);
+		}
+		return existing;
+	}
 
 	const campaign = {
 		id: todayId,
-		code: 'HAUNTED-2026',
-		slotsTotal: 50,
+		code: 'HAUNTED',
+		slotsTotal: 1000,
 		claimedCount: 0,
 		active: true,
 	};
