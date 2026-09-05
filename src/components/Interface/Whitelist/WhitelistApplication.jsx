@@ -4,10 +4,10 @@ import './WhitelistApplication.css';
 
 const tasks = [
 	{ id: 1, title: 'Follow us', description: '@Haunting_Hoods', action: 'FOLLOW', url: 'https://x.com/intent/follow?screen_name=Haunting_Hoods' },
-	{ id: 2, title: 'Like the pinned post', description: 'One tap', action: 'LIKE', url: 'https://x.com/intent/like?tweet_id=2095880792765497711' },
-	{ id: 3, title: 'Repost', description: 'Spread the word', action: 'REPOST', url: 'https://x.com/intent/retweet?tweet_id=2095880792765497711' },
-	{ id: 4, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/intent/post?in_reply_to=2095880792765497711' },
-	{ id: 5, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/intent/retweet?tweet_id=2095880792765497711' },
+	{ id: 2, title: 'Like the pinned post', description: 'One tap', action: 'LIKE', url: 'https://x.com/intent/like?tweet_id=2096261996492828753' },
+	{ id: 3, title: 'Repost', description: 'Spread the word', action: 'REPOST', url: 'https://x.com/intent/retweet?tweet_id=2096261996492828753' },
+	{ id: 4, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/intent/post?in_reply_to=2096261996492828753' },
+	{ id: 5, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/intent/retweet?tweet_id=2096261996492828753' },
 ];
 
 export default function WhitelistApplication() {
