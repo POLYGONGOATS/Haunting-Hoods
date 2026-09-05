@@ -137,9 +137,13 @@ service cloud.firestore {
       allow create: if
         request.auth != null &&
         request.auth.uid == uid &&
+        request.auth.token.firebase.sign_in_provider == 'twitter.com' &&
+        request.time >= request.auth.token.auth_time + duration.value(60, 's') &&
         request.resource.data.uid == uid &&
         request.resource.data.walletAddress is string &&
         request.resource.data.walletAddress.size() > 0 &&
+        request.resource.data.quoteTweetLink is string &&
+        request.resource.data.quoteTweetLink.matches('^https://(x|twitter)\\.com/.*') &&
         request.resource.data.campaignId is string &&
         request.resource.data.claimNumber is number &&
         request.resource.data.createdAt == request.time;
