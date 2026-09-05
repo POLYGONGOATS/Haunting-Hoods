@@ -106,11 +106,7 @@ const useWhitelist = create((set, get) => ({
 			});
 			get().refreshCampaign();
 		} catch (error) {
-			let errorMsg = error.code || 'UNKNOWN';
-			if (error.code === 'permission-denied') {
-				errorMsg = 'You are moving too fast. Please wait a minute and try again.';
-			}
-			set({ claiming: false, claimError: errorMsg });
+			set({ claiming: false, claimError: error.code || 'UNKNOWN' });
 		}
 	},
 }));
