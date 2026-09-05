@@ -121,7 +121,7 @@ export const claimWhitelistSpot = async ({
 			campaign = {
 				id: campaignId,
 				code: 'HAUNTED',
-				slotsTotal: 1000,
+				slotsTotal: 4444,
 				claimedCount: 0,
 				active: true,
 			};
@@ -133,9 +133,9 @@ export const claimWhitelistSpot = async ({
 				err.code = CLAIM_ERRORS.CAMPAIGN_INACTIVE;
 				throw err;
 			}
-			if (campaign.slotsTotal < 1000) {
-				campaign.slotsTotal = 1000;
-				transaction.update(campaignRef, { slotsTotal: 1000 });
+			if (campaign.slotsTotal < 4444) {
+				campaign.slotsTotal = 4444;
+				transaction.update(campaignRef, { slotsTotal: 4444 });
 			}
 		}
 
