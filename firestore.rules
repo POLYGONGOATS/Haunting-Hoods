@@ -149,5 +149,11 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    }
+
+    match /raffle_entries/{discordId} {
+      allow read: if true;
+      allow write: if false; // Only writable by the Vercel Serverless Function via Admin SDK
+    }
   }
 }

@@ -1,0 +1,13 @@
+/* Re-use whitelist styles for now, but allow overrides if needed */
+#og-raffle .wl-submit-btn:hover:not(:disabled) {
+    background-color: #9146FF !important;
+    color: #fff !important;
+}
+
+#og-raffle .eyebrow {
+    color: #9146FF !important;
+}
+
+#og-raffle .wl-details-header {
+    color: #9146FF !important;
+}

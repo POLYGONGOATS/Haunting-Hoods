@@ -26,6 +26,7 @@
 		"@react-three/postprocessing": "^2.16.7",
 		"@types/three": "^0.180.0",
 		"firebase": "^12.4.0",
+		"firebase-admin": "^14.3.0",
 		"framer-motion": "^13.1.1",
 		"leva": "^0.9.35",
 		"postprocessing": "^6.37.8",

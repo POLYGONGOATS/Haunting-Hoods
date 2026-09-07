@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import useWhitelist from '../hooks/useWhitelist';
 import WhitelistClaimPanel from './Interface/Whitelist/WhitelistClaimPanel';
 import WhitelistApplication from './Interface/Whitelist/WhitelistApplication';
+import RaffleSection from './Interface/Raffle/RaffleSection';
 import HoodCarousel from './Interface/HoodCarousel/HoodCarousel';
 import './LandingPage.css';
 
@@ -79,6 +80,7 @@ export default function LandingPage() {
 				</section>
 
 				<WhitelistApplication />
+				<RaffleSection />
 			</main>
 
 			<footer>
