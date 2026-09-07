@@ -46,6 +46,7 @@ export default function LandingPage() {
 				<nav className="landing-links">
 					<a href="#story" onClick={handleComingSoon}>STORY</a>
 					<a href="#game" onClick={handleComingSoon}>WHITELIST HUNT 🔒</a>
+					<a href="#og-raffle">OG RAFFLE ✦</a>
 					<a href="#roadmap" onClick={handleComingSoon}>ROADMAP</a>
 				</nav>
 				<button className="menu-button" aria-label="Open menu">☰</button>
