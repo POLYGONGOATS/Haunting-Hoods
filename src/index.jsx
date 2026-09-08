@@ -149,7 +149,48 @@ document.querySelector('#root').classList.toggle('landing-mode', isLandingMode);
 root.render(
 	<React.StrictMode>
 		<ErrorBoundary>
-			{isGameRoute && <App />}
+			{isGameRoute && (
+				<div style={{
+					position: 'fixed', inset: 0,
+					background: '#080808',
+					display: 'flex', flexDirection: 'column',
+					alignItems: 'center', justifyContent: 'center',
+					color: '#f5f5f5',
+					fontFamily: "'Lincoln Road Regular', Arial, sans-serif",
+					textAlign: 'center',
+					gap: '1.5rem',
+				}}>
+					<div style={{
+						position: 'fixed', inset: 0, pointerEvents: 'none',
+						background: 'radial-gradient(circle at center, transparent 40%, rgba(138, 3, 3, 0.18) 100%)',
+					}} />
+					<img src="/images/new-logo.png" alt="Haunting Hoods" style={{
+						width: '90px', height: '90px', borderRadius: '50%',
+						filter: 'grayscale(1)', opacity: 0.85,
+						animation: 'pulse 5s ease-in-out infinite',
+					}} />
+					<div style={{ fontSize: '2.5rem', letterSpacing: '-0.03em', lineHeight: 1 }}>
+						🔒
+					</div>
+					<h1 style={{
+						fontSize: 'clamp(2rem, 6vw, 4rem)', fontWeight: 400,
+						letterSpacing: '-0.04em', margin: 0,
+					}}>THE HUNT IS SEALED.</h1>
+					<p style={{ color: '#747474', fontSize: '0.9rem', letterSpacing: '0.1em', margin: 0, maxWidth: '380px', lineHeight: 1.7 }}>
+						The Whitelist Hunt will be unsealed when the time comes.<br />Stay tuned.
+					</p>
+					<a href="/" style={{
+						marginTop: '0.5rem', padding: '0.9rem 1.8rem',
+						border: '1px solid #3a3a3a', color: '#f5f5f5',
+						textDecoration: 'none', fontSize: '0.65rem',
+						letterSpacing: '0.15em', transition: 'border-color 0.2s',
+					}}
+					onMouseEnter={e => e.target.style.borderColor = '#ff4d4d'}
+					onMouseLeave={e => e.target.style.borderColor = '#3a3a3a'}
+					>← RETURN TO HOME</a>
+					<style>{`@keyframes pulse { 0%,100%{transform:scale(1);opacity:.85} 50%{transform:scale(1.03);opacity:1} }`}</style>
+				</div>
+			)}
 			{isLoreRoute && <InfoPage data={LORE_DATA} />}
 			{isUtilityRoute && <UtilityPage />}
 			{isRoadmapRoute && <InfoPage data={ROADMAP_DATA} />}
