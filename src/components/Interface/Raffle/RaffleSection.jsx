@@ -80,7 +80,7 @@ export default function RaffleSection() {
 	};
 
 	return (
-		<section className="wl-application-section" id="og-raffle" style={{ marginTop: '4rem' }}>
+		<section className="wl-application-section" id="og-raffle" style={{ paddingTop: '1rem' }}>
 			<div className="wl-app-container">
 				<div className="wl-app-header">
 					<p className="eyebrow" style={{ color: '#9146FF' }}>OG EXCLUSIVE</p>
