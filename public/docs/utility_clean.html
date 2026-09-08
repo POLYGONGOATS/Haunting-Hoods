@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunting Hoods  Utility</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+:root{--bg:#050506;--panel:#0d0e11;--panel2:#111217;--line:#26272c;--text:#e8e8e8;--muted:#85858d;--white:#fff;--accent:#d8d2c4}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:radial-gradient(circle at 50% -10%,#1a1a1d 0,#080809 35%,#050506 70%);color:var(--text);font-family:Inter,Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.055;background-image:radial-gradient(#fff .55px,transparent .55px);background-size:4px 4px}
+.wrap{max-width:980px;margin:auto;padding:24px 18px 70px}
+nav{position:sticky;top:0;z-index:20;background:rgba(5,5,6,.84);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:11px 0}
+.navin{max-width:980px;margin:auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Space Mono";font-size:11px;letter-spacing:1.6px}
+.brand img{width:30px;height:30px;object-fit:cover;border-radius:50%;filter:grayscale(1)}
+.progress{height:3px;background:#202126;flex:1;max-width:260px;border-radius:9px;overflow:hidden} .bar{height:100%;width:0;background:#d9d4c8;transition:.2s}
+.hero{min-height:680px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
+.hero-logo{width:min(270px,65vw);height:min(270px,65vw);object-fit:cover;border-radius:50%;filter:grayscale(1) contrast(1.08);box-shadow:0 0 90px rgba(255,255,255,.07);animation:pulse 5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.025);opacity:1}}
+.kicker{font-family:"Space Mono";font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:30px}
+h1{font-size:clamp(42px,9vw,88px);line-height:.92;letter-spacing:-4px;margin:14px 0 18px;color:#f5f5f5}
+.hero p{max-width:630px;color:#a4a4aa;line-height:1.7;font-size:14px}
+.cta{margin-top:28px;padding:13px 18px;border:1px solid #3a3b40;background:#111216;color:white;border-radius:999px;cursor:pointer;font-weight:700;letter-spacing:.6px}
+.cta:hover{background:#1b1c20}
+.terminal{font-family:"Space Mono";font-size:10px;color:#6f7077;letter-spacing:1px;margin-top:32px}
+.section{margin:18px 0;background:linear-gradient(145deg,#0d0e11,#090a0c);border:1px solid var(--line);border-radius:18px;padding:26px;scroll-margin-top:78px;box-shadow:0 20px 70px rgba(0,0,0,.18)}
+.section-head{display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:20px}
+.number{font-family:"Space Mono";font-size:12px;color:#777a82;border:1px solid var(--line);width:42px;height:42px;display:grid;place-items:center;border-radius:50%}
+.eyebrow{font-family:"Space Mono";font-size:9px;color:#666970;letter-spacing:2px;margin-bottom:5px}
+h2{margin:0;font-size:25px;letter-spacing:-1px;color:#f2f2f2}
+.section-body{max-width:760px;color:#b8b8bf;font-size:14px;line-height:1.8}
+.section-body p{margin:0 0 12px} .section-body p:last-child{margin-bottom:0}
+.reveal{margin-top:22px;width:100%;display:flex;justify-content:space-between;align-items:center;background:#111216;border:1px solid #292a2f;color:#c9c9ce;padding:13px 14px;border-radius:10px;font:700 10px "Space Mono";letter-spacing:1px;cursor:pointer}
+.reveal span{font-size:17px;line-height:10px;color:#8b8c92}
+.classified{display:none;padding-top:14px;gap:8px;flex-wrap:wrap} .section.open .classified{display:flex} .section.open .reveal span{transform:rotate(45deg)}
+.tag{font:700 9px "Space Mono";letter-spacing:1px;padding:9px 10px;border:1px solid #303137;border-radius:7px;color:#7e8088;background:#0a0b0d}
+.map{padding:34px 10px 38px;margin-top:45px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.map-title{text-align:center;font:700 11px "Space Mono";letter-spacing:3px;color:#777981;margin-bottom:26px}
+.flow{display:flex;flex-direction:column;align-items:center}
+.flow-node{width:min(570px,95%);background:#0d0e11;border:1px solid #292a2f;color:#e5e5e5;padding:14px 16px;border-radius:10px;text-align:left;display:flex;align-items:center;gap:14px;font:700 11px "Space Mono";letter-spacing:.5px;cursor:pointer;transition:.2s}
+.flow-node:hover{border-color:#777;transform:translateY(-1px)} .flow-node span{color:#666a73;font-size:9px}
+.flow-line{width:1px;height:18px;background:#34353a}
+.final{text-align:center;padding:100px 10px 60px}
+.final img{width:100px;height:100px;border-radius:50%;filter:grayscale(1);opacity:.82}
+.final h3{font-size:28px;margin:25px 0 15px} .final p{color:#7f8087;line-height:1.8;font-size:13px}
+.redacted{margin:35px auto 0;max-width:650px;border:1px solid #2a2b30;background:#0d0e11;padding:18px;border-radius:12px;font-family:"Space Mono";font-size:10px;line-height:1.8;color:#777981}
+footer{text-align:center;color:#4e5057;font:9px "Space Mono";letter-spacing:1.5px;padding-top:25px}
+@media(max-width:600px){.wrap{padding-left:12px;padding-right:12px}.section{padding:20px;border-radius:14px}h2{font-size:21px}.hero{min-height:610px}}
+
+.closing{margin-top:55px;padding-top:45px;border-top:1px solid var(--line);font-family:"Space Mono";letter-spacing:2px;color:#c7c4bc}
+.closing p{margin:10px 0;font-size:12px}
+.closing h3{font-size:30px;letter-spacing:-1px;margin-top:25px}
+.utility-intro .section{border-color:#34353a}
+.section-body strong{color:#e7e5de;letter-spacing:.3px}
+</style>
+</head>
+<body>
+<nav><div class="navin"><div class="brand"><img src="IMAGE">HAUNTING HOODS</div><div class="progress"><div class="bar" id="bar"></div></div></div></nav>
+<main class="wrap">
+<section class="hero">
+<img class="hero-logo" src="IMAGE">
+<div class="kicker">UTILITY // ECOSYSTEM DOSSIER</div>
+<h1>THE NEW WORLD<br>BEGINS.</h1>
+<p>4444 Hoods. One broken Seal. An evolving ecosystem built around lore, competition, Factions, an on-chain economy and future projects under the Haunting Hoods IP.</p>
+<button class="cta" onclick="document.getElementById('utility').scrollIntoView()">ENTER THE UTILITY FILE</button>
+<div class="terminal">CLEARANCE: PUBLIC // CLASSIFIED DETAILS REMAIN LOCKED</div>
+</section>
+
+
+<section id="utility">
+  <div class="utility-intro">
+    <div class="section">
+      <div class="section-head">
+        <span class="number">HH</span>
+        <div><div class="eyebrow">ECOSYSTEM OVERVIEW // PUBLIC CLEARANCE</div><h2>HAUNTING HOODS // UTILITY</h2></div>
+      </div>
+      <div class="section-body">
+        <p><strong>4444 HOODS</strong><br><strong>ONE BROKEN SEAL</strong><br><strong>ONE WORLD WAITING TO FALL</strong></p>
+        <p>Haunting Hoods is not designed to be just another NFT collection.</p>
+        <p>The 4444 Hoods are the foundation of an evolving world built around lore, competition, Factions, an on-chain economy and future projects under the Haunting Hoods IP.</p>
+        <p><strong>YOUR HOOD IS YOUR ENTRY INTO THE WORLD.</strong></p>
+      </div>
+    </div>
+  </div>
+  
+    <article class="section" id="s01">
+      <div class="section-head">
+        <span class="number">01</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>THE RECKONING</h2></div>
+      </div>
+      <div class="section-body"><p>Once the Hoods enter the world, every Hood will receive its own set of Reckoning Quests.</p><p>The quests are directly connected to the lore and the Hoods' mission to bring about the destruction of the world.</p><p>QUESTS: [ REDACTED ]<br>REQUIREMENTS: [ REDACTED ]<br>REWARDS: [ REDACTED ]</p><p>There is no deadline.</p><p>But speed matters.</p><p>The earlier a Hood completes its Reckoning, the greater its potential edge when the New World begins.</p><p>And there is one final objective:</p><p>THE FIRST HOOD TO COMPLETE<br>ITS ENTIRE RECKONING WILL TRIGGER</p><p>☠️ THE APOCALYPSE.</p></div>
+    </article>
+    
+    <article class="section" id="s02">
+      <div class="section-head">
+        <span class="number">02</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>THE APOCALYPSE</h2></div>
+      </div>
+      <div class="section-body"><p>The Apocalypse marks the end of the beginning.</p><p>Once the first Hood completes its mission, the next phase of Haunting Hoods begins.</p><p>THE TOKEN LAUNCHES.<br>STAKING BEGINS.<br>THE NEW WORLD FORMS.</p><p>The old world falls.</p><p>The Hoods are no longer prisoners.</p><p>They are now free to decide<br>what comes next.</p></div>
+    </article>
+    
+    <article class="section" id="s03">
+      <div class="section-head">
+        <span class="number">03</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>THE FACTIONS</h2></div>
+      </div>
+      <div class="section-body"><p>The 4444 Hoods will be divided into:</p><p>11 FACTIONS<br>404 HOODS PER FACTION</p><p>But not everyone gets to choose whenever they want.</p><p>The order matters.</p><p>The faster your Hood completes its Reckoning, the earlier your opportunity to choose your Faction.</p><p>Once a Faction reaches 404 Hood:</p><p>THE CHOICE IS GONE.</p><p>Choose carefully.</p></div>
+    </article>
+    
+    <article class="section" id="s04">
+      <div class="section-head">
+        <span class="number">04</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>FACTION LEADERSHIP</h2></div>
+      </div>
+      <div class="section-body"><p>Every Faction will have:</p><p>01 GENERAL<br>02 WARDENS</p><p>The holder with the highest number of Hoods from that Faction at the seasonal snapshot becomes General.</p><p>The second-highest becomes a Warden.</p><p>The third-highest becomes the other Warden.</p><p>But leadership is never permanent.</p><p>Every season brings a new snapshot.</p><p>Every season can create new leaders.</p><p>OWNERSHIP.<br>PARTICIPATION.<br>STRATEGY.</p><p>THE BALANCE CAN ALWAYS CHANGE.</p></div>
+    </article>
+    
+    <article class="section" id="s05">
+      <div class="section-head">
+        <span class="number">05</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>OG PASS // CLASSIFIED</h2></div>
+      </div>
+      <div class="section-body"><p>Not everyone entered this world with the same clearance.</p><p>OG Pass holders will carry their own place within the Faction system.</p><p>OG CLEARANCE: ACTIVE<br>FACTION AUTHORITY: [ REDACTED ]<br>OG POWERS: [ REDACTED ]</p><p>The full extent of the OG Pass will be revealed when the Factions form.</p><p>For now, one thing is confirmed:</p><p>THE OG PASS WILL HAVE A ROLE<br>IN THE NEW WORLD.</p></div>
+    </article>
+    
+    <article class="section" id="s06">
+      <div class="section-head">
+        <span class="number">06</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>FACTION WARS</h2></div>
+      </div>
+      <div class="section-body"><p>Once the Factions are formed, the competition begins.</p><p>Each season becomes a new battle between the 11 Factions.</p><p>Your Faction's performance matters.</p><p>Your Hood's participation matters.</p><p>Simply owning a Hood will not automatically make it eligible for seasonal rewards.</p><p>To participate, your Hood must be activated for the relevant season.</p></div>
+    </article>
+    
+    <article class="section" id="s07">
+      <div class="section-head">
+        <span class="number">07</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>SEASONAL ACTIVATION</h2></div>
+      </div>
+      <div class="section-body"><p>To activate your Hood:</p><p>◆ STAKE YOUR HOOD<br>◆ BURN THE REQUIRED AMOUNT OF<br>   HAUNTING HOODS TOKENS</p><p>Once activated, your Hood can participate in the Faction Wars.</p><p>The activities, requirements and exact amounts will be revealed when the system goes live.</p></div>
+    </article>
+    
+    <article class="section" id="s08">
+      <div class="section-head">
+        <span class="number">08</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>SEASONS & REWARDS</h2></div>
+      </div>
+      <div class="section-body"><p>At the end of every season, the 11 Factions are ranked.</p><p>A seasonal reward pool will be distributed in the Haunting Hoods token.</p><p>Your Faction's final ranking matters.</p><p>Your individual activity matters.</p><p>The exact reward calculation:</p><p>[ REDACTED ]</p><p>The minimum participation threshold:</p><p>[ REDACTED ]</p><p>Certain states make a Hood ineligible.</p><p>LISTED: INELIGIBLE<br>UNSTAKED: INELIGIBLE<br>INACTIVE: INELIGIBLE</p><p>Then:</p><p>REWARDS ARE DISTRIBUTED.<br>THE LEADERBOARD RESETS.<br>THE NEXT SEASON BEGINS.</p><p>SEASON 01<br>↓<br>RESET<br>↓<br>SEASON 02<br>↓<br>RESET<br>↓<br>SEASON 03<br>↓<br>...</p><p>EVERY SEASON IS ANOTHER CHANCE<br>TO CHANGE THE BALANCE OF POWER.</p></div>
+    </article>
+    
+    <article class="section" id="s09">
+      <div class="section-head">
+        <span class="number">09</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>THE HOODS ECONOMY</h2></div>
+      </div>
+      <div class="section-body"><p>The Haunting Hoods token is designed to power the ecosystem.</p><p>It isn't simply something to hold.</p><p>It can be:</p><p>EARNED.<br>SPENT.<br>BURNED.<br>BOUGHT.<br>SOLD.<br>USED.</p><p>Token utility can connect to:</p><p>◆ Hood activation<br>◆ Staking<br>◆ Faction participation<br>◆ Competitive mechanics<br>◆ Seasonal rewards<br>◆ Future utilities<br>◆ Additional ecosystem systems</p><p>THE EXACT SUPPLY.<br>THE EXACT QUANTITIES.<br>THE EXACT FEES.</p><p>[ REDACTED ]</p></div>
+    </article>
+    
+    <article class="section" id="s10">
+      <div class="section-head">
+        <span class="number">10</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>BUYBACKS</h2></div>
+      </div>
+      <div class="section-body"><p>A portion of eligible royalties generated by Haunting Hoods will contribute toward token buybacks.</p><p>And the original collection is only the beginning.</p><p>As new projects, products, experiences and ventures are developed under the Haunting Hoods IP, future revenue may also contribute toward token buybacks.</p><p>THE EXACT STRUCTURE:</p><p>[ REDACTED ]</p><p>The goal is simple:</p><p>VALUE GENERATED BY THE ECOSYSTEM<br>FLOWS BACK INTO THE ECOSYSTEM.</p></div>
+    </article>
+    
+    <article class="section" id="s11">
+      <div class="section-head">
+        <span class="number">11</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>OWNERSHIP</h2></div>
+      </div>
+      <div class="section-body"><p>A Hood changing hands changes its seasonal status.</p><p>When a Hood is transferred, it becomes inactive.</p><p>The new holder must activate the Hood again for the relevant season if they want to participate.</p><p>But the Reckoning is different.</p><p>Once the Reckoning Questline has been completed, it is permanent.</p><p>THE QUEST IS COMPLETED ONCE.</p><p>SEASONAL ACTIVATION IS SEPARATE.</p></div>
+    </article>
+    
+    <article class="section" id="s12">
+      <div class="section-head">
+        <span class="number">12</span>
+        <div><div class="eyebrow">UTILITY FILE</div><h2>THE FUTURE</h2></div>
+      </div>
+      <div class="section-body"><p>The 4444 Hoods are the foundation.</p><p>They are not the destination.</p><p>Haunting Hoods is being built as an IP and ecosystem designed to keep expanding.</p><p>Future projects, products, experiences, collaborations and additional mechanics may introduce new ways to interact with the Haunting Hoods universe.</p><p>Future opportunities may include:</p><p>◆ Whitelist spots<br>◆ Allocations<br>◆ Partner NFTs<br>◆ Early access<br>◆ Special benefits<br>◆ Future ecosystem rewards</p><p>The exact benefits and mechanics:</p><p>[ REDACTED ]</p><p>THE ROADMAP IS NOT STATIC.</p><p>The systems introduced today are the foundation, not the ceiling.</p></div>
+    </article>
+    
+</section>
+
+
+<section class="map" id="journey">
+<div class="map-title">THE JOURNEY // FOLLOW THE WORLD</div>
+<div class="flow">
+<button class="flow-node" onclick="jumpTo(0)"><span>01</span>THE SEAL WEAKENS</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(1)"><span>02</span>MINT</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(2)"><span>03</span>4444 HOODS ENTER THE WORLD</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(3)"><span>04</span>THE RECKONING</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(4)"><span>05</span>FIRST HOOD COMPLETES ITS MISSION</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(5)"><span>06</span>THE APOCALYPSE</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(6)"><span>07</span>TOKEN + STAKING</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(7)"><span>08</span>11 FACTIONS</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(8)"><span>09</span>FACTION WARS</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(9)"><span>10</span>SEASONAL RANKINGS</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(10)"><span>11</span>REWARDS</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(11)"><span>12</span>RESET</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(12)"><span>13</span>A NEW SEASON</button><div class="flow-line"></div><button class="flow-node" onclick="jumpTo(13)"><span>14</span>THE ECOSYSTEM EXPANDS</button></div></section>
+
+<section class="final">
+<img class="hero-logo" src="IMAGE">
+<h3>🔒 REDACTED // FOR NOW</h3>
+<p>Certain mechanics, requirements, quantities, rewards and additional utilities have intentionally been kept REDACTED.</p>
+<div class="redacted">These details will be revealed once the mint is complete and the relevant systems are ready.<br><br>Nothing is being rushed.<br>The world will reveal itself one phase at a time.</div>
+<div class="closing">
+<p>THE SEAL BROKE.</p>
+<p>THE HOODS EMERGED.</p>
+<p>THE WORLD FELL.</p>
+<p>NOW</p>
+<h3>THE NEW WORLD BEGINS.</h3>
+</div>
+</section>
+
+<footer>THE SEAL BROKE. &nbsp; THE HOODS EMERGED. &nbsp; THE WORLD FELL. &nbsp; NOW THE NEW WORLD BEGINS.</footer>
+</main>
+<script>
+const nums = 10;
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('bar').style.width=(window.scrollY/h*100)+'%';
+});
+function jumpTo(i){
+  const ids=["THE SEAL WEAKENS","MINT","4444 HOODS ENTER THE WORLD","THE RECKONING","FIRST HOOD COMPLETES ITS MISSION","THE APOCALYPSE","TOKEN + STAKING","11 FACTIONS","FACTION WARS","SEASONAL RANKINGS","REWARDS","RESET","A NEW SEASON","THE ECOSYSTEM EXPANDS"];
+  const el=document.querySelectorAll('.flow-node')[i];
+  if(i===3) document.getElementById('s01').scrollIntoView();
+  else if(i===5) document.getElementById('s02').scrollIntoView();
+  else if(i===7) document.getElementById('s03').scrollIntoView();
+  else if(i===8) document.getElementById('s05').scrollIntoView();
+  else if(i===9) document.getElementById('s06').scrollIntoView();
+  else if(i===10) document.getElementById('s06').scrollIntoView();
+  else if(i===13) document.getElementById('journey').scrollIntoView();
+  else document.getElementById('journey').scrollIntoView();
+}
+</script>
+</body>
+</html>

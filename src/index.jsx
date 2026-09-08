@@ -4,6 +4,11 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import LandingPage from './components/LandingPage';
+import InfoPage from './components/InfoPage';
+import UtilityPage from './components/Interface/Utility/UtilityPage';
+import { LORE_DATA } from './data/lore';
+import { UTILITY_DATA } from './data/utility';
+import { ROADMAP_DATA } from './data/roadmap';
 import './style.css';
 import BugReport from './components/Interface/BugReport/BugReport';
 import UnsupportedGPU from './components/Interface/UnsupportedGPU';
@@ -127,14 +132,28 @@ class ErrorBoundary extends React.Component {
 }
 
 const root = createRoot(document.querySelector('#root'));
-const isGameRoute = window.location.pathname === '/game';
-document.documentElement.classList.toggle('landing-mode', !isGameRoute);
-document.body.classList.toggle('landing-mode', !isGameRoute);
-document.querySelector('#root').classList.toggle('landing-mode', !isGameRoute);
+const pathname = window.location.pathname;
+
+const isGameRoute = pathname === '/game';
+const isLoreRoute = pathname.startsWith('/lore');
+const isUtilityRoute = pathname.startsWith('/utility');
+const isRoadmapRoute = pathname.startsWith('/roadmap');
+
+const isInfoRoute = isLoreRoute || isUtilityRoute || isRoadmapRoute;
+const isLandingMode = !isGameRoute;
+
+document.documentElement.classList.toggle('landing-mode', isLandingMode);
+document.body.classList.toggle('landing-mode', isLandingMode);
+document.querySelector('#root').classList.toggle('landing-mode', isLandingMode);
+
 root.render(
 	<React.StrictMode>
 		<ErrorBoundary>
-			{isGameRoute ? <App /> : <LandingPage />}
+			{isGameRoute && <App />}
+			{isLoreRoute && <InfoPage data={LORE_DATA} />}
+			{isUtilityRoute && <UtilityPage />}
+			{isRoadmapRoute && <InfoPage data={ROADMAP_DATA} />}
+			{!isGameRoute && !isInfoRoute && <LandingPage />}
 		</ErrorBoundary>
 	</React.StrictMode>
 );

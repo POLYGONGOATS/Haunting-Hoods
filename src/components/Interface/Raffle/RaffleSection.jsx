@@ -2,17 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './RaffleSection.css'; // We will create this
 import useWhitelist from '../../../hooks/useWhitelist';
 
-const ACTIVE_RAFFLES = [
-	{
-		id: 1,
-		name: 'Everdraw RPG',
-		spots: '1 Guaranteed Spot',
-		endTimeMs: new Date('2026-09-08T17:15:00+05:30').getTime(), // 6 hours from current time
-		status: 'LIVE',
-		image: '/images/everdraw.jpg',
-		twitter: 'https://x.com/Everdraw_RPG'
-	}
-];
 
 const CountdownTimer = ({ endTimeMs }) => {
 	const [timeLeft, setTimeLeft] = useState('');
@@ -134,27 +123,10 @@ export default function RaffleSection() {
 					<div className="wl-tasks-header" style={{ color: '#9146FF', borderBottom: '1px solid rgba(145, 70, 255, 0.2)' }}>
 						<span>ACTIVE RAFFLES</span>
 					</div>
-					<div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-						{ACTIVE_RAFFLES.map((raffle) => (
-							<div key={raffle.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(145, 70, 255, 0.05)', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(145, 70, 255, 0.1)' }}>
-								<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-									<img src={raffle.image} alt={raffle.name} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
-									<div>
-										<h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1rem', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-											{raffle.name}
-											<a href={raffle.twitter} target="_blank" rel="noopener noreferrer" style={{ color: '#9146FF', textDecoration: 'none', fontSize: '0.8rem' }}>[𝕏]</a>
-										</h3>
-										<div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-											<span><strong style={{ color: '#9146FF' }}>REWARD:</strong> {raffle.spots}</span>
-											<span><strong style={{ color: '#9146FF' }}>TIME:</strong> <CountdownTimer endTimeMs={raffle.endTimeMs} /></span>
-										</div>
-									</div>
-								</div>
-								<div style={{ fontSize: '0.65rem', color: '#9146FF', border: '1px solid #9146FF', padding: '0.3rem 0.6rem', borderRadius: '4px', background: 'rgba(145, 70, 255, 0.1)', letterSpacing: '0.1em', fontWeight: 'bold' }}>
-									{raffle.status}
-								</div>
-							</div>
-						))}
+					<div style={{ padding: '2.5rem 1.5rem', textAlign: 'center' }}>
+						<p style={{ color: '#9146FF', fontFamily: '"Space Mono", monospace', fontSize: '0.7rem', letterSpacing: '0.2em', margin: '0 0 0.6rem' }}>INCOMING</p>
+						<p style={{ color: '#f5f5f5', fontSize: '1.1rem', margin: '0 0 0.5rem', letterSpacing: '0.05em' }}>Stay tuned.</p>
+						<p style={{ color: '#747474', fontSize: '0.82rem', letterSpacing: '0.08em', margin: 0 }}>Projects are lined up.</p>
 					</div>
 				</div>
 

@@ -44,16 +44,16 @@ export default function LandingPage() {
 					<img src="/images/new-logo.png" alt="" /> HAUNTING HOODS
 				</a>
 				<nav className="landing-links">
-					<a href="#story" onClick={handleComingSoon}>STORY</a>
-					<a href="#game" onClick={handleComingSoon}>WHITELIST HUNT 🔒</a>
-					<a href="#og-raffle">OG RAFFLE ✦</a>
-					<a href="#roadmap" onClick={handleComingSoon}>ROADMAP</a>
+					<a href="/lore">LORE</a>
+					<a href="/utility">UTILITY</a>
+					<a href="/game">WHITELIST HUNT 🔒</a>
+					<a href="/#og-raffle">OG RAFFLE ✦</a>
 				</nav>
 				<button className="menu-button" aria-label="Open menu">☰</button>
 			</header>
 
 			<main>
-				<section className="landing-hero" id="story">
+				<section className="landing-hero" id="hero">
 					<div className="hero-copy">
 						<p className="hero-kicker">THE SEAL IS WEAKENING <span>•</span></p>
 						<h1>HAUNTING<br />HOODS</h1>
@@ -71,7 +71,7 @@ export default function LandingPage() {
 					</div>
 				</section>
 
-				<section className="collection-section" id="roadmap">
+				<section className="collection-section" id="collection">
 					<div className="collection-intro">
 						<p className="eyebrow">THE COLLECTION</p>
 						<h2>EACH HOOD<br />HAS A PAST</h2>
