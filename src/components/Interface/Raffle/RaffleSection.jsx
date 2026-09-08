@@ -5,10 +5,12 @@ import useWhitelist from '../../../hooks/useWhitelist';
 const ACTIVE_RAFFLES = [
 	{
 		id: 1,
-		name: 'Project Example',
-		spots: '50 WL Spots',
+		name: 'Everdraw RPG',
+		spots: '1 Guaranteed Spot',
 		endTime: 'Ends in 48 Hours',
-		status: 'LIVE'
+		status: 'LIVE',
+		image: '/images/everdraw.jpg',
+		twitter: 'https://x.com/Everdraw_RPG'
 	}
 ];
 
@@ -107,11 +109,17 @@ export default function RaffleSection() {
 					<div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 						{ACTIVE_RAFFLES.map((raffle) => (
 							<div key={raffle.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(145, 70, 255, 0.05)', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(145, 70, 255, 0.1)' }}>
-								<div>
-									<h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1rem', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{raffle.name}</h3>
-									<div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-										<span><strong style={{ color: '#9146FF' }}>REWARD:</strong> {raffle.spots}</span>
-										<span><strong style={{ color: '#9146FF' }}>TIME:</strong> {raffle.endTime}</span>
+								<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+									<img src={raffle.image} alt={raffle.name} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+									<div>
+										<h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1rem', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+											{raffle.name}
+											<a href={raffle.twitter} target="_blank" rel="noopener noreferrer" style={{ color: '#9146FF', textDecoration: 'none', fontSize: '0.8rem' }}>[𝕏]</a>
+										</h3>
+										<div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+											<span><strong style={{ color: '#9146FF' }}>REWARD:</strong> {raffle.spots}</span>
+											<span><strong style={{ color: '#9146FF' }}>TIME:</strong> {raffle.endTime}</span>
+										</div>
 									</div>
 								</div>
 								<div style={{ fontSize: '0.65rem', color: '#9146FF', border: '1px solid #9146FF', padding: '0.3rem 0.6rem', borderRadius: '4px', background: 'rgba(145, 70, 255, 0.1)', letterSpacing: '0.1em', fontWeight: 'bold' }}>
