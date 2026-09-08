@@ -7,12 +7,40 @@ const ACTIVE_RAFFLES = [
 		id: 1,
 		name: 'Everdraw RPG',
 		spots: '1 Guaranteed Spot',
-		endTime: 'Ends in 48 Hours',
+		endTimeMs: new Date('2026-09-08T17:15:00+05:30').getTime(), // 6 hours from current time
 		status: 'LIVE',
 		image: '/images/everdraw.jpg',
 		twitter: 'https://x.com/Everdraw_RPG'
 	}
 ];
+
+const CountdownTimer = ({ endTimeMs }) => {
+	const [timeLeft, setTimeLeft] = useState('');
+
+	useEffect(() => {
+		const updateTimer = () => {
+			const now = Date.now();
+			const diff = endTimeMs - now;
+
+			if (diff <= 0) {
+				setTimeLeft('ENDED');
+				return;
+			}
+
+			const hours = Math.floor(diff / (1000 * 60 * 60));
+			const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+			const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+			setTimeLeft(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+		};
+
+		updateTimer();
+		const interval = setInterval(updateTimer, 1000);
+		return () => clearInterval(interval);
+	}, [endTimeMs]);
+
+	return <span>{timeLeft}</span>;
+};
 
 export default function RaffleSection() {
 	const [isConnecting, setIsConnecting] = useState(false);
@@ -118,7 +146,7 @@ export default function RaffleSection() {
 										</h3>
 										<div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
 											<span><strong style={{ color: '#9146FF' }}>REWARD:</strong> {raffle.spots}</span>
-											<span><strong style={{ color: '#9146FF' }}>TIME:</strong> {raffle.endTime}</span>
+											<span><strong style={{ color: '#9146FF' }}>TIME:</strong> <CountdownTimer endTimeMs={raffle.endTimeMs} /></span>
 										</div>
 									</div>
 								</div>
