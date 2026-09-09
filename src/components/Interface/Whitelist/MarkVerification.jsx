@@ -65,7 +65,7 @@ export default function MarkVerification() {
 		return (
 			<section className="wl-application-section" id="whitelist-hunt">
 				<div className="wl-app-container" style={{ textAlign: 'center', opacity: 0.5 }}>
-					<p className="eyebrow">ACCESS DENIED</p>
+					<p className="eyebrow">FIND ALL 6 HIDDEN SIGILS, THEN THIS WILL BE ACCESSIBLE</p>
 					<h2>THE SEAL REMAINS.</h2>
 					<p className="wl-app-subtitle">
 						You have not yet been marked by the darkness.<br/>Seek out the hidden sigils before you present yourself.
