@@ -29,7 +29,7 @@ export default function MarkVerification() {
 	const [showAvatarSelection, setShowAvatarSelection] = useState(false);
 	const [selectedAvatar, setSelectedAvatar] = useState(null);
 
-	const hasMark = collectedSigils.length === 6 && markCode;
+	const hasMark = collectedSigils.length >= 4 && markCode;
 
 	useEffect(() => {
 		const START_TIME = new Date('2026-09-09T20:00:00+05:30').getTime();
@@ -71,8 +71,8 @@ export default function MarkVerification() {
 	};
 
 	if (!hasMark && !alreadyClaimed) {
-		const collectedCount = collectedSigils ? collectedSigils.length : 0;
-		const progressPercentage = (collectedCount / 6) * 100;
+		const collectedCount = collectedSigils ? Math.min(collectedSigils.length, 4) : 0;
+		const progressPercentage = (collectedCount / 4) * 100;
 		
 		return (
 			<section className="wl-application-section" id="whitelist-hunt" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -92,7 +92,7 @@ export default function MarkVerification() {
 					</div>
 					
 					<p className="eyebrow" style={{ color: '#ff4d4d', letterSpacing: '4px', marginBottom: '1.5rem', opacity: 0.8 }}>
-						FIND ALL 6 HIDDEN SIGILS, THEN THIS WILL BE ACCESSIBLE
+						FIND AT LEAST 4 HIDDEN SIGILS, THEN THIS WILL BE ACCESSIBLE
 					</p>
 					
 					<h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '1rem', textShadow: '0 0 30px rgba(255, 77, 77, 0.15)', letterSpacing: '-1px', color: '#e0e0e0' }}>
@@ -113,7 +113,7 @@ export default function MarkVerification() {
 					<div style={{ marginTop: '3.5rem', marginBottom: '1rem', maxWidth: '400px', margin: '3.5rem auto 1rem' }}>
 						<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem', color: '#ff4d4d', fontSize: '0.8rem', letterSpacing: '2px', fontWeight: 'bold' }}>
 							<span>SIGILS FOUND</span>
-							<span>{collectedCount} / 6</span>
+							<span>{collectedCount} / 4</span>
 						</div>
 						<div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
 							<div style={{ 

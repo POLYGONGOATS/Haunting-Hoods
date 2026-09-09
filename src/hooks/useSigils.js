@@ -60,11 +60,11 @@ const useSigils = create((set, get) => ({
 	collectedSigils: loadState().collectedSigils,
 	markCode: loadState().markCode,
 	spotMapping: loadState().spotMapping,
-	cinematicActive: loadState().collectedSigils.length >= 6 && !loadState().markCode,
+	cinematicActive: loadState().collectedSigils.length >= 4 && !loadState().markCode,
 
 	initCheck: () => {
 		const { collectedSigils, markCode, spotMapping } = get();
-		if (collectedSigils.length >= 6 && !markCode) {
+		if (collectedSigils.length >= 4 && !markCode) {
 			const newMarkCode = generateMarkCode();
 			set({ markCode: newMarkCode, cinematicActive: true });
 			saveState({ collectedSigils, markCode: newMarkCode, spotMapping });
@@ -78,7 +78,7 @@ const useSigils = create((set, get) => ({
 			let newMarkCode = markCode;
 			let triggersCinematic = false;
 
-			if (updatedSigils.length === 6 && !markCode) {
+			if (updatedSigils.length === 4 && !markCode) {
 				newMarkCode = generateMarkCode();
 				triggersCinematic = true;
 			}
