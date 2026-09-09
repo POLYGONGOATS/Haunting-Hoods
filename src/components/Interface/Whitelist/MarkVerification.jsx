@@ -62,14 +62,82 @@ export default function MarkVerification() {
 	};
 
 	if (!hasMark && !alreadyClaimed) {
+		const collectedCount = collectedSigils ? collectedSigils.length : 0;
+		const progressPercentage = (collectedCount / 6) * 100;
+		
 		return (
-			<section className="wl-application-section" id="whitelist-hunt">
-				<div className="wl-app-container" style={{ textAlign: 'center', opacity: 0.5 }}>
-					<p className="eyebrow">FIND ALL 6 HIDDEN SIGILS, THEN THIS WILL BE ACCESSIBLE</p>
-					<h2>THE SEAL REMAINS.</h2>
-					<p className="wl-app-subtitle">
-						You have not yet been marked by the darkness.<br/>Seek out the hidden sigils before you present yourself.
+			<section className="wl-application-section" id="whitelist-hunt" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+				<div className="wl-app-container" style={{ 
+					textAlign: 'center', 
+					padding: '5rem 2rem', 
+					border: '1px solid rgba(255, 77, 77, 0.15)', 
+					background: 'radial-gradient(circle at center, rgba(30, 5, 5, 0.8) 0%, rgba(5, 2, 2, 0.95) 100%)',
+					boxShadow: '0 0 60px rgba(255, 0, 0, 0.03) inset',
+					position: 'relative',
+					overflow: 'hidden',
+					maxWidth: '800px',
+					width: '100%'
+				}}>
+					<div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.02, fontSize: '24rem', pointerEvents: 'none', filter: 'blur(4px)' }}>
+						<img src="/images/new-logo.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+					</div>
+					
+					<p className="eyebrow" style={{ color: '#ff4d4d', letterSpacing: '4px', marginBottom: '1.5rem', opacity: 0.8 }}>
+						FIND ALL 6 HIDDEN SIGILS, THEN THIS WILL BE ACCESSIBLE
 					</p>
+					
+					<h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '1rem', textShadow: '0 0 30px rgba(255, 77, 77, 0.15)', letterSpacing: '-1px', color: '#e0e0e0' }}>
+						THE SEAL REMAINS.
+					</h2>
+					
+					<div style={{ width: '80px', height: '1px', background: 'linear-gradient(90deg, transparent, #ff4d4d, transparent)', margin: '2.5rem auto', opacity: 0.5 }} />
+					
+					<p className="wl-app-subtitle" style={{ fontSize: '1.1rem', color: '#888', maxWidth: '500px', margin: '0 auto', lineHeight: '1.8' }}>
+						You have not yet been marked by the darkness.<br/>
+						<span style={{ color: '#aaa' }}>Seek out the hidden sigils before you present yourself.</span>
+					</p>
+
+					<div style={{ marginTop: '3.5rem', marginBottom: '1rem', maxWidth: '400px', margin: '3.5rem auto 1rem' }}>
+						<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem', color: '#ff4d4d', fontSize: '0.8rem', letterSpacing: '2px', fontWeight: 'bold' }}>
+							<span>SIGILS FOUND</span>
+							<span>{collectedCount} / 6</span>
+						</div>
+						<div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+							<div style={{ 
+								height: '100%', 
+								width: `${progressPercentage}%`, 
+								background: 'linear-gradient(90deg, #8a0303, #ff4d4d)',
+								boxShadow: '0 0 10px #ff4d4d',
+								transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
+							}} />
+						</div>
+					</div>
+
+					<div style={{ marginTop: '3rem' }}>
+						<a href="/utility" style={{
+							display: 'inline-block',
+							padding: '1rem 2.5rem',
+							border: '1px solid rgba(255, 77, 77, 0.4)',
+							color: '#ff4d4d',
+							textDecoration: 'none',
+							fontSize: '0.8rem',
+							letterSpacing: '3px',
+							transition: 'all 0.3s ease',
+							background: 'rgba(255, 77, 77, 0.05)',
+							textTransform: 'uppercase'
+						}}
+						onMouseEnter={(e) => {
+							e.target.style.background = 'rgba(255, 77, 77, 0.15)';
+							e.target.style.boxShadow = '0 0 20px rgba(255, 77, 77, 0.2)';
+						}}
+						onMouseLeave={(e) => {
+							e.target.style.background = 'rgba(255, 77, 77, 0.05)';
+							e.target.style.boxShadow = 'none';
+						}}
+						>
+							RETURN TO HUNT
+						</a>
+					</div>
 				</div>
 			</section>
 		);
