@@ -114,10 +114,21 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Daily whitelist hunt campaigns: created/managed by admins only (via
-    // console/admin SDK). Clients may only read the active campaign to show
-    // slots remaining; claimedCount updates happen only via the transaction
-    // performed against whitelist_claims below.
+    match /mark_verifications/{markCode} {
+      allow read: if true;
+      allow update: if true; // Admin UI
+      allow create: if
+        request.resource.data.markCode == markCode &&
+        request.resource.data.discordUser is string &&
+        request.resource.data.twitterHandle is string &&
+        request.resource.data.tweetUrl is string &&
+        request.resource.data.walletAddress is string &&
+        request.resource.data.status == 'PENDING' &&
+        request.resource.data.createdAt == request.time;
+      allow delete: if false;
+    }
+
+    // Keep the old collections for backward compatibility or future use
     match /whitelist_campaigns/{campaignId} {
       allow read: if true;
       allow create, delete: if false;

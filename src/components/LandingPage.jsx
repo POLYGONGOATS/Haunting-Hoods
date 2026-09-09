@@ -4,6 +4,7 @@ import WhitelistClaimPanel from './Interface/Whitelist/WhitelistClaimPanel';
 import WhitelistApplication from './Interface/Whitelist/WhitelistApplication';
 import RaffleSection from './Interface/Raffle/RaffleSection';
 import HoodCarousel from './Interface/HoodCarousel/HoodCarousel';
+import SigilPlacement from './Interface/Story/SigilPlacement';
 import './LandingPage.css';
 
 const GAME_PATH = '/game';
@@ -46,8 +47,8 @@ export default function LandingPage() {
 				<nav className="landing-links">
 					<a href="/lore">LORE</a>
 					<a href="/utility">UTILITY</a>
-					<a href="#" onClick={handleComingSoon}>WHITELIST HUNT 🔒</a>
-					<a href="/#og-raffle">OG RAFFLE ✦</a>
+					<a href="/whitelist">WHITELIST HUNT</a>
+					<a href="#og-raffle">OG RAFFLE ✦</a>
 				</nav>
 				<button className="menu-button" aria-label="Open menu">☰</button>
 			</header>
@@ -55,13 +56,13 @@ export default function LandingPage() {
 			<main>
 				<section className="landing-hero" id="hero">
 					<div className="hero-copy">
-						<p className="hero-kicker">THE SEAL IS WEAKENING <span>•</span></p>
+						<p className="hero-kicker">THE SEAL IS WEAKENING <span>•</span> <SigilPlacement spotId="landing-hero" style={{marginLeft: '1rem', position: 'relative', top: '2px'}} /></p>
 						<h1>HAUNTING<br />HOODS</h1>
 						<p className="hero-description">4444 entities were sealed away<br />to keep the balance. They will return.</p>
 						<a
 							className="primary-button"
 							style={{ background: '#451717', borderColor: '#ff4d4d', display: 'inline-block', textDecoration: 'none' }}
-							href="#whitelist"
+							href="/whitelist"
 						>
 							APPLY FOR WHITELIST <span>✦</span>
 						</a>
@@ -71,7 +72,8 @@ export default function LandingPage() {
 					</div>
 				</section>
 
-				<section className="collection-section" id="collection">
+				<section className="collection-section" id="collection" style={{ position: 'relative' }}>
+					<SigilPlacement spotId="landing-collection" style={{ position: 'absolute', top: '2rem', right: '10%' }} />
 					<div className="collection-intro">
 						<p className="eyebrow">THE COLLECTION</p>
 						<h2>EACH HOOD<br />HAS A PAST</h2>
@@ -84,10 +86,10 @@ export default function LandingPage() {
 				<RaffleSection />
 			</main>
 
-			<footer>
+			<footer className="landing-footer">
 				<span>© 2026 HAUNTING HOODS. ALL RIGHTS RESERVED.</span>
 				<span><a href="https://x.com/Haunting_Hoods" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}>X (TWITTER)</a></span>
-				<span>TERMS　　PRIVACY</span>
+				<span>TERMS　　PRIVACY <SigilPlacement spotId="landing-footer" style={{marginLeft: '2rem'}} /></span>
 			</footer>
 			<WhitelistClaimPanel />
 

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './RaffleSection.css'; // We will create this
-import useWhitelist from '../../../hooks/useWhitelist';
-
 
 const CountdownTimer = ({ endTimeMs }) => {
 	const [timeLeft, setTimeLeft] = useState('');
@@ -35,7 +33,7 @@ export default function RaffleSection() {
 	const [isConnecting, setIsConnecting] = useState(false);
 	const [status, setStatus] = useState(null); // 'checking', 'success', 'error'
 	const [errorMessage, setErrorMessage] = useState('');
-	const { walletAddress, setWalletAddress } = useWhitelist(); // Re-use wallet state
+	const [walletAddress, setWalletAddress] = useState('');
 
 	useEffect(() => {
 		// Check for OAuth callback

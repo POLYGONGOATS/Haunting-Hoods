@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './UtilityPage.css';
 import ScrambledText from './ScrambledText';
+import SigilPlacement from '../Story/SigilPlacement';
 
 export default function UtilityPage() {
     const [scrollProgress, setScrollProgress] = useState(0);
@@ -42,7 +43,7 @@ export default function UtilityPage() {
         
         return (
             <article className={`section ${isOpen ? 'open' : ''}`} id={id}>
-                <div className="section-head">
+                <div className="section-head" onClick={() => setIsOpen(!isOpen)}>
                     <span className="number">{number}</span>
                     <div>
                         {eyebrow && <div className="eyebrow">{eyebrow}</div>}
@@ -106,8 +107,14 @@ export default function UtilityPage() {
                         <p>But speed matters.</p>
                         <p>The earlier a Hood completes its Reckoning, the greater its potential edge when the New World begins.</p>
                         <p>And there is one final objective:</p>
-                        <p>THE FIRST HOOD TO COMPLETE<br/>ITS ENTIRE RECKONING WILL TRIGGER</p>
-                        <p>☠️ THE APOCALYPSE.</p>
+                        <p>THE SANCTUM OF WHISPERS</p>
+                        <p className="utility-intro">
+                            Stake your Hood. Gather corrupted souls.
+                        </p>
+                        <div className="utility-coming-soon">
+                            <span>SYSTEM OFFLINE</span>
+                            <SigilPlacement spotId="utility-top" style={{marginTop: '2rem'}} />
+                        </div>
                     </ExpandableSection>
 
                     <ExpandableSection id="s02" number="02" title="THE APOCALYPSE">
@@ -164,7 +171,8 @@ export default function UtilityPage() {
                     <ExpandableSection id="s07" number="07" title="SEASONAL ACTIVATION">
                         <p>To activate your Hood:</p>
                         <p>◆ STAKE YOUR HOOD<br/>◆ BURN THE REQUIRED AMOUNT OF<br/>   HAUNTING HOODS TOKENS</p>
-                        <p>Once activated, your Hood can participate in the Faction Wars.</p>
+                        <p>Once activated, your Hood can participate in the Faction Wars and use the Soul Forge to craft and enchant new artifacts in Phase II.</p>
+                        <SigilPlacement spotId="utility-middle" style={{marginTop: '2rem'}} />
                         <p>The activities, requirements and exact amounts will be revealed when the system goes live.</p>
                     </ExpandableSection>
 
@@ -278,6 +286,10 @@ export default function UtilityPage() {
                         <p>THE WORLD FELL.</p>
                         <p>NOW</p>
                         <h3>THE NEW WORLD BEGINS.</h3>
+                        <div className="utility-footer-note">
+                            <p>MORE UTILITY MECHANICS WILL BE UNSEALED SOON.</p>
+                            <SigilPlacement spotId="utility-bottom" style={{marginTop: '4rem', display: 'block'}} />
+                        </div>
                     </div>
                 </section>
 

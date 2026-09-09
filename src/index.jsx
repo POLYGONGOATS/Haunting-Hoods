@@ -6,6 +6,10 @@ import App from './App';
 import LandingPage from './components/LandingPage';
 import InfoPage from './components/InfoPage';
 import UtilityPage from './components/Interface/Utility/UtilityPage';
+import ArchivePanel from './components/Interface/Story/ArchivePanel';
+import MarkCinematic from './components/Interface/Story/MarkCinematic';
+import AdminDashboard from './components/Admin/AdminDashboard';
+import WhitelistPage from './components/WhitelistPage';
 import { LORE_DATA } from './data/lore';
 import { UTILITY_DATA } from './data/utility';
 import { ROADMAP_DATA } from './data/roadmap';
@@ -16,7 +20,7 @@ import { checkGPUSupport, isWebGLError } from './utils/gpuDetection';
 import { getConsoleMessages } from './utils/consoleLogger';
 import useWhitelist from './hooks/useWhitelist';
 
-useWhitelist.getState().init();
+
 
 function tryAutoCompatOnce() {
 	try {
@@ -138,8 +142,10 @@ const isGameRoute = pathname === '/game';
 const isLoreRoute = pathname.startsWith('/lore');
 const isUtilityRoute = pathname.startsWith('/utility');
 const isRoadmapRoute = pathname.startsWith('/roadmap');
+const isAdminRoute = pathname.startsWith('/admin');
+const isWhitelistRoute = pathname.startsWith('/whitelist');
 
-const isInfoRoute = isLoreRoute || isUtilityRoute || isRoadmapRoute;
+const isInfoRoute = isLoreRoute || isUtilityRoute || isRoadmapRoute || isAdminRoute || isWhitelistRoute;
 const isLandingMode = !isGameRoute;
 
 document.documentElement.classList.toggle('landing-mode', isLandingMode);
@@ -194,7 +200,16 @@ root.render(
 			{isLoreRoute && <InfoPage data={LORE_DATA} />}
 			{isUtilityRoute && <UtilityPage />}
 			{isRoadmapRoute && <InfoPage data={ROADMAP_DATA} />}
+			{isAdminRoute && <AdminDashboard />}
+			{isWhitelistRoute && <WhitelistPage />}
 			{!isGameRoute && !isInfoRoute && <LandingPage />}
+			
+			{!isGameRoute && !isAdminRoute && (
+				<>
+					<ArchivePanel />
+					<MarkCinematic />
+				</>
+			)}
 		</ErrorBoundary>
 	</React.StrictMode>
 );

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import useWhitelist from '../../../hooks/useWhitelist';
+import SigilPlacement from '../Story/SigilPlacement';
 import './WhitelistApplication.css';
 
 const tasks = [
@@ -8,6 +9,7 @@ const tasks = [
 	{ id: 3, title: 'Repost', description: 'Spread the word', action: 'REPOST', url: 'https://x.com/intent/retweet?tweet_id=2097525377656598532' },
 	{ id: 4, title: 'Leave a comment', description: 'Say which clan you seek', action: 'REPLY', url: 'https://x.com/intent/tweet?in_reply_to=2097525377656598532' },
 	{ id: 5, title: 'Quote tweet', description: 'Tag humans you\'d drag into the darkness', action: 'QUOTE', url: 'https://x.com/intent/retweet?tweet_id=2097525377656598532' },
+	{ id: 6, title: 'Join our Discord', description: 'Enter the Sanctum', action: 'JOIN', url: 'https://discord.gg/hauntinghoods' },
 ];
 
 export default function WhitelistApplication() {
@@ -18,6 +20,8 @@ export default function WhitelistApplication() {
 		connectTwitter, 
 		walletAddress, 
 		setWalletAddress, 
+		discordUser,
+		setDiscordUser,
 		quoteTweetLink,
 		setQuoteTweetLink,
 		submitClaim, 
@@ -44,6 +48,7 @@ export default function WhitelistApplication() {
 		<section className="wl-application-section" id="whitelist">
 			<div className="wl-app-container">
 				<div className="wl-app-header">
+					<SigilPlacement spotId="whitelist-form" style={{position: 'absolute', top: '1rem', right: '1rem'}} />
 					<p className="eyebrow">APPLICATION</p>
 					<h2>SECURE YOUR SPOT.</h2>
 					<p className="wl-app-subtitle">
@@ -54,7 +59,7 @@ export default function WhitelistApplication() {
 				<div className="wl-tasks-section">
 					<div className="wl-tasks-header">
 						<span>TASKS</span>
-						<span className="wl-tasks-count"><span className="highlight">{completedTasks.length}</span> OF 5</span>
+						<span className="wl-tasks-count"><span className="highlight">{completedTasks.length}</span> OF {tasks.length}</span>
 					</div>
 					
 					<div className="wl-connect-twitter">
@@ -75,6 +80,7 @@ export default function WhitelistApplication() {
 									useWhitelist.getState().disconnect();
 									setCompletedTasks([]);
 									setWalletAddress('');
+									setDiscordUser('');
 									if (setQuoteTweetLink) setQuoteTweetLink('');
 								}}
 								style={{ background: 'none', border: 'none', color: '#ff4d4d', fontSize: '0.6rem', marginTop: '0.5rem', cursor: 'pointer', textDecoration: 'underline' }}
@@ -146,19 +152,36 @@ export default function WhitelistApplication() {
 						<span>YOUR DETAILS</span>
 					</div>
 					
-					<div className="wl-address-input-group" style={{ marginTop: '0', paddingTop: '0', borderTop: 'none' }}>
-						<div className="wl-address-label">
-							<strong>WALLET ADDRESS</strong>
-							<span>where we drop the spoils</span>
+					<div className="wl-address-input-group" style={{ marginTop: '0', paddingTop: '0', borderTop: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div>
+							<div className="wl-address-label" style={{ marginBottom: '0.5rem' }}>
+								<strong>DISCORD USERNAME</strong>
+								<span>Enter the Sanctum</span>
+							</div>
+							<input 
+								type="text" 
+								className="wl-address-input" 
+								placeholder={completedTasks.length < tasks.length ? "Complete tasks first..." : "e.g. hauntinghood#1234"} 
+								value={discordUser}
+								onChange={(e) => setDiscordUser(e.target.value)}
+								disabled={alreadyClaimed || claiming || completedTasks.length < tasks.length || !user}
+							/>
 						</div>
-						<input 
-							type="text" 
-							className="wl-address-input" 
-							placeholder={completedTasks.length < 5 ? "Complete tasks first..." : "Submit your ETH address..."} 
-							value={walletAddress}
-							onChange={(e) => setWalletAddress(e.target.value)}
-							disabled={alreadyClaimed || claiming || completedTasks.length < 5 || !user}
-						/>
+						
+						<div>
+							<div className="wl-address-label" style={{ marginBottom: '0.5rem' }}>
+								<strong>WALLET ADDRESS</strong>
+								<span>where we drop the spoils</span>
+							</div>
+							<input 
+								type="text" 
+								className="wl-address-input" 
+								placeholder={completedTasks.length < tasks.length ? "Complete tasks first..." : "Submit your ETH address..."} 
+								value={walletAddress}
+								onChange={(e) => setWalletAddress(e.target.value)}
+								disabled={alreadyClaimed || claiming || completedTasks.length < tasks.length || !user}
+							/>
+						</div>
 					</div>
 				</div>
 
@@ -171,12 +194,13 @@ export default function WhitelistApplication() {
 				) : (
 					<button 
 						className="wl-submit-btn" 
-						disabled={completedTasks.length < 5 || !user || !walletAddress.trim() || claiming}
+						disabled={completedTasks.length < tasks.length || !user || !walletAddress.trim() || !discordUser.trim() || claiming}
 						onClick={() => submitClaim(null)}
 					>
 						{claiming ? 'SUBMITTING...' : 'APPLY FOR WHITELIST'} <span>✦</span>
 					</button>
 				)}
+				<SigilPlacement spotId="whitelist-footer" style={{marginTop: '2rem', display: 'block', textAlign: 'center'}} />
 			</div>
 		</section>
 	);

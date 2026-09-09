@@ -10,6 +10,9 @@ import {
 	setDoc,
 	runTransaction,
 	serverTimestamp,
+	updateDoc,
+	getDocs,
+	collection,
 } from 'firebase/firestore';
 import {
 	mockSignInWithTwitter,
@@ -113,6 +116,7 @@ export const CLAIM_ERRORS = {
 export const claimWhitelistSpot = async ({
 	uid,
 	twitterHandle,
+	discordUser,
 	walletAddress,
 	quoteTweetLink,
 	code,
@@ -124,7 +128,7 @@ export const claimWhitelistSpot = async ({
 	}
 
 	if (!isFirebaseConfigured) {
-		return mockClaimWhitelistSpot({ uid, twitterHandle, walletAddress, quoteTweetLink, code });
+		return mockClaimWhitelistSpot({ uid, twitterHandle, discordUser, walletAddress, quoteTweetLink, code });
 	}
 
 	const campaignId = getTodayCampaignId();
@@ -189,6 +193,7 @@ export const claimWhitelistSpot = async ({
 		transaction.set(claimRef, {
 			uid,
 			twitterHandle: twitterHandle || null,
+			discordUser: discordUser ? discordUser.trim() : null,
 			walletAddress: walletAddress.trim(),
 			quoteTweetLink: quoteTweetLink ? quoteTweetLink.trim() : null,
 			campaignId,
@@ -202,4 +207,61 @@ export const claimWhitelistSpot = async ({
 
 		return { claimNumber, slotsTotal, campaignId };
 	});
+};
+
+// ============================================
+// MARK OF THE HOOD VERIFICATION SYSTEM
+// ============================================
+
+const VERIFICATIONS_COLLECTION = 'mark_verifications';
+
+export const submitMarkVerification = async ({
+	discordUser,
+	twitterHandle,
+	tweetUrl,
+	walletAddress,
+	markCode,
+}) => {
+	if (!discordUser || !twitterHandle || !tweetUrl || !walletAddress || !markCode) {
+		const err = new Error('All fields are required');
+		err.code = CLAIM_ERRORS.MISSING_FIELDS;
+		throw err;
+	}
+
+	if (!isFirebaseConfigured) {
+		return { success: true };
+	}
+
+	const verificationRef = doc(db, VERIFICATIONS_COLLECTION, markCode);
+	const snap = await getDoc(verificationRef);
+
+	if (snap.exists()) {
+		const err = new Error('This Mark has already been verified.');
+		err.code = CLAIM_ERRORS.ALREADY_SUBMITTED;
+		throw err;
+	}
+
+	await setDoc(verificationRef, {
+		markCode,
+		discordUser: discordUser.trim(),
+		twitterHandle: twitterHandle.trim(),
+		tweetUrl: tweetUrl.trim(),
+		walletAddress: walletAddress.trim(),
+		status: 'PENDING',
+		createdAt: serverTimestamp(),
+	});
+
+	return { success: true, markCode };
+};
+
+export const getAllVerifications = async () => {
+	if (!isFirebaseConfigured) return [];
+	const snapshot = await getDocs(collection(db, VERIFICATIONS_COLLECTION));
+	return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const updateVerificationStatus = async (markCode, status) => {
+	if (!isFirebaseConfigured) return;
+	const ref = doc(db, VERIFICATIONS_COLLECTION, markCode);
+	await updateDoc(ref, { status });
 };
