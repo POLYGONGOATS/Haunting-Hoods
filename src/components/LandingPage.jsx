@@ -62,7 +62,7 @@ export default function LandingPage() {
 						<a
 							className="primary-button"
 							style={{ background: '#451717', borderColor: '#ff4d4d', display: 'inline-block', textDecoration: 'none' }}
-							href="/whitelist"
+							href="#whitelist"
 						>
 							APPLY FOR WHITELIST <span>✦</span>
 						</a>
