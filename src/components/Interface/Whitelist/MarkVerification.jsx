@@ -149,6 +149,22 @@ export default function MarkVerification() {
 									TWEET
 								</a>
 							</div>
+							
+							<div className="wl-task-item" style={{ border: 'none', padding: 0 }}>
+								<div className="wl-task-info">
+									<h4 style={{ color: '#fff', fontSize: '1.1rem' }}>3. ENTER THE SANCTUM</h4>
+									<p style={{ color: '#777', fontSize: '0.9rem', marginTop: '0.5rem' }}>Join the Haunting Hoods Discord and prepare for the reckoning.</p>
+								</div>
+								<a 
+									href="https://discord.gg/hauntinghoods" 
+									target="_blank" 
+									rel="noopener noreferrer" 
+									className="wl-task-btn"
+									style={{ textDecoration: 'none', display: 'inline-block', textAlign: 'center' }}
+								>
+									JOIN
+								</a>
+							</div>
 						</div>
 					</div>
 				)}
