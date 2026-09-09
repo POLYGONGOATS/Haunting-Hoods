@@ -262,6 +262,8 @@ export default function MarkVerification() {
 							</div>
 							<input 
 								type="text" 
+								id="discordUser"
+								name="discordUser"
 								className="wl-address-input" 
 								placeholder="e.g. hauntinghood#1234" 
 								value={discordUser}
@@ -276,6 +278,8 @@ export default function MarkVerification() {
 							</div>
 							<input 
 								type="text" 
+								id="twitterHandle"
+								name="twitterHandle"
 								className="wl-address-input" 
 								placeholder="@username" 
 								value={twitterHandle}
@@ -291,6 +295,8 @@ export default function MarkVerification() {
 							</div>
 							<input 
 								type="url" 
+								id="tweetUrl"
+								name="tweetUrl"
 								className="wl-address-input" 
 								placeholder="https://x.com/..." 
 								value={tweetUrl}
@@ -306,6 +312,8 @@ export default function MarkVerification() {
 							</div>
 							<input 
 								type="text" 
+								id="walletAddress"
+								name="walletAddress"
 								className="wl-address-input" 
 								placeholder="0x..." 
 								value={walletAddress}
