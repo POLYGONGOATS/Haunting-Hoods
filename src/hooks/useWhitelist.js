@@ -20,6 +20,8 @@ const useWhitelist = create((set, get) => ({
 	claimError: null,
 	walletAddress: '',
 	setWalletAddress: (value) => set({ walletAddress: value }),
+	discordUser: '',
+	setDiscordUser: (value) => set({ discordUser: value }),
 	quoteTweetLink: '',
 	setQuoteTweetLink: (value) => set({ quoteTweetLink: value }),
 
@@ -70,7 +72,7 @@ const useWhitelist = create((set, get) => ({
 
 	disconnect: async () => {
 		await signOutUser();
-		set({ user: null, alreadyClaimed: false, claimResult: null, quoteTweetLink: '' });
+		set({ user: null, alreadyClaimed: false, claimResult: null, quoteTweetLink: '', discordUser: '' });
 	},
 
 	resetDatabase: async () => {
@@ -84,7 +86,7 @@ const useWhitelist = create((set, get) => ({
 	},
 
 	submitClaim: async (code) => {
-		const { user, walletAddress, quoteTweetLink } = get();
+		const { user, walletAddress, discordUser, quoteTweetLink } = get();
 		if (!user) {
 			set({ claimError: 'NOT_SIGNED_IN' });
 			return;
@@ -96,6 +98,7 @@ const useWhitelist = create((set, get) => ({
 				uid: user.uid,
 				twitterHandle: user.reloadUserInfo?.screenName || user.displayName,
 				walletAddress,
+				discordUser,
 				quoteTweetLink,
 				code,
 			});
