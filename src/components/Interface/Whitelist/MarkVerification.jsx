@@ -93,8 +93,12 @@ export default function MarkVerification() {
 					<div style={{ width: '80px', height: '1px', background: 'linear-gradient(90deg, transparent, #ff4d4d, transparent)', margin: '2.5rem auto', opacity: 0.5 }} />
 					
 					<p className="wl-app-subtitle" style={{ fontSize: '1.1rem', color: '#888', maxWidth: '500px', margin: '0 auto', lineHeight: '1.8' }}>
-						You have not yet been marked by the darkness.<br/>
-						<span style={{ color: '#aaa' }}>Seek out the hidden sigils before you present yourself.</span>
+						You have not yet been fully marked by the darkness.<br/>
+						<span style={{ color: '#aaa' }}>The seal will only break once all fragments are united.</span>
+					</p>
+					
+					<p style={{ marginTop: '1.5rem', color: '#ff4d4d', fontSize: '0.85rem', fontStyle: 'italic', letterSpacing: '1px', opacity: 0.9 }}>
+						HINT: Explore every single corner of our realm. You will find them all.
 					</p>
 
 					<div style={{ marginTop: '3.5rem', marginBottom: '1rem', maxWidth: '400px', margin: '3.5rem auto 1rem' }}>
