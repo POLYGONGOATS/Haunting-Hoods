@@ -3,6 +3,12 @@ import useMarkVerification from '../../../hooks/useMarkVerification';
 import useSigils from '../../../hooks/useSigils';
 import './WhitelistApplication.css';
 
+const AVATARS = [
+	'2685.png', '3333.png', '3421.png', '3934.png', 
+	'4026.png', '4247.png', '3537.png', '426.png', 
+	'568.png', '596.png', '982.png', '843.png'
+];
+
 export default function MarkVerification() {
 	const { collectedSigils, markCode } = useSigils();
 	const {
@@ -19,6 +25,9 @@ export default function MarkVerification() {
 	const [twitterHandle, setTwitterHandle] = useState('');
 	const [tweetUrl, setTweetUrl] = useState('');
 	const [walletAddress, setWalletAddress] = useState('');
+
+	const [showAvatarSelection, setShowAvatarSelection] = useState(false);
+	const [selectedAvatar, setSelectedAvatar] = useState(null);
 
 	const hasMark = collectedSigils.length === 6 && markCode;
 
@@ -196,14 +205,13 @@ export default function MarkVerification() {
 									<h4 style={{ color: '#fff', fontSize: '1.1rem' }}>1. WEAR THE HOOD</h4>
 									<p style={{ color: '#777', fontSize: '0.9rem', marginTop: '0.5rem' }}>Change your X/Twitter profile picture to the official Hood avatar.</p>
 								</div>
-								<a 
-									href="/images/haunting-hoods-main-character.png" 
-									download 
+								<button 
+									onClick={() => setShowAvatarSelection(true)}
 									className="wl-task-btn"
-									style={{ textDecoration: 'none', display: 'inline-block', textAlign: 'center' }}
+									style={{ textDecoration: 'none', display: 'inline-block', textAlign: 'center', border: 'none', cursor: 'pointer', fontFamily: 'inherit', background: '#ff4d4d', color: '#000' }}
 								>
-									DOWNLOAD
-								</a>
+									{selectedAvatar ? 'CHANGE HOOD' : 'DOWNLOAD'}
+								</button>
 							</div>
 							
 							<div className="wl-task-item" style={{ border: 'none', padding: 0 }}>
@@ -328,6 +336,68 @@ export default function MarkVerification() {
 					</button>
 				)}
 			</div>
+
+			{showAvatarSelection && (
+				<div style={{
+					position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, 
+					background: 'rgba(5, 2, 2, 0.95)', zIndex: 9999, 
+					display: 'flex', alignItems: 'center', justifyContent: 'center',
+					padding: '2rem'
+				}}>
+					<div style={{
+						background: '#111', border: '1px solid rgba(255, 77, 77, 0.3)', 
+						borderRadius: '8px', padding: '2rem', maxWidth: '800px', width: '100%',
+						maxHeight: '90vh', overflowY: 'auto',
+						boxShadow: '0 0 50px rgba(0,0,0,0.8)'
+					}}>
+						<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+							<div>
+								<h3 style={{ margin: 0, color: '#e0e0e0', fontSize: '1.5rem', letterSpacing: '2px', fontFamily: '"Space Mono", monospace' }}>CHOOSE YOUR HOOD</h3>
+								<p style={{ margin: 0, color: '#888', fontSize: '0.9rem', marginTop: '0.5rem' }}>Select an avatar to download and use for your profile.</p>
+							</div>
+							<button onClick={() => setShowAvatarSelection(false)} style={{ background: 'none', border: 'none', color: '#ff4d4d', fontSize: '2rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
+						</div>
+						
+						<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1.5rem' }}>
+							{AVATARS.map((avatar) => (
+								<div 
+									key={avatar}
+									onClick={() => setSelectedAvatar(avatar)}
+									style={{
+										border: selectedAvatar === avatar ? '2px solid #ff4d4d' : '2px solid #333',
+										borderRadius: '4px', cursor: 'pointer', overflow: 'hidden',
+										transition: 'all 0.2s ease', opacity: selectedAvatar === avatar ? 1 : 0.6,
+										boxShadow: selectedAvatar === avatar ? '0 0 15px rgba(255, 77, 77, 0.4)' : 'none'
+									}}
+									onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+									onMouseLeave={(e) => e.currentTarget.style.opacity = selectedAvatar === avatar ? '1' : '0.6'}
+								>
+									<img src={`/images/avatars/${avatar}`} alt="Hood Avatar" style={{ width: '100%', display: 'block' }} />
+								</div>
+							))}
+						</div>
+						
+						<div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+							<button 
+								onClick={() => setShowAvatarSelection(false)}
+								style={{ padding: '0.8rem 1.5rem', background: 'transparent', border: '1px solid #555', color: '#aaa', cursor: 'pointer', letterSpacing: '1px', fontFamily: '"Space Mono", monospace' }}
+							>
+								CANCEL
+							</button>
+							{selectedAvatar && (
+								<a 
+									href={`/images/avatars/${selectedAvatar}`} 
+									download 
+									onClick={() => setShowAvatarSelection(false)}
+									style={{ padding: '0.8rem 1.5rem', background: '#ff4d4d', border: 'none', color: '#000', textDecoration: 'none', fontWeight: 'bold', letterSpacing: '1px', cursor: 'pointer', fontFamily: '"Space Mono", monospace' }}
+								>
+									DOWNLOAD SELECTED
+								</a>
+							)}
+						</div>
+					</div>
+				</div>
+			)}
 		</section>
 	);
 }
