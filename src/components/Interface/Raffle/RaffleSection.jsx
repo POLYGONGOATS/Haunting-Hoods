@@ -33,7 +33,7 @@ export default function RaffleSection() {
 	const [isConnecting, setIsConnecting] = useState(false);
 	const [status, setStatus] = useState(null); // 'checking', 'success', 'error', 'ready'
 	const [errorMessage, setErrorMessage] = useState('');
-	const [walletAddress, setWalletAddress] = useState('');
+	const [walletAddress, setWalletAddress] = useState(() => localStorage.getItem('raffle_wallet') || '');
 	const [discordCode, setDiscordCode] = useState(null);
 
 	useEffect(() => {
