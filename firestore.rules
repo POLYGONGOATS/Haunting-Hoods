@@ -116,16 +116,7 @@ service cloud.firestore {
 
     match /mark_verifications/{markCode} {
       allow read: if true;
-      allow update: if true; // Admin UI
-      allow create: if
-        request.resource.data.markCode == markCode &&
-        request.resource.data.discordUser is string &&
-        request.resource.data.twitterHandle is string &&
-        request.resource.data.tweetUrl is string &&
-        request.resource.data.walletAddress is string &&
-        request.resource.data.status == 'PENDING' &&
-        request.resource.data.createdAt == request.time;
-      allow delete: if false;
+      allow write: if true;
     }
 
     // Keep the old collections for backward compatibility or future use
@@ -158,8 +149,6 @@ service cloud.firestore {
         request.resource.data.claimNumber is number &&
         request.resource.data.createdAt == request.time;
       allow update, delete: if false;
-    }
-
     }
 
     match /raffle_entries/{discordId} {

@@ -17,7 +17,7 @@ import useMonster from './hooks/useMonster';
 import useGridStore from './hooks/useGrid';
 import useLight from './hooks/useLight';
 import PostProcessing from './components/PostProcessing';
-import { probeFirestoreReachability } from './firebase/healthCheck';
+import { probeSupabaseReachability } from './supabase/healthCheck';
 import useWhitelist from './hooks/useWhitelist';
 
 import { Leva, useControls, button } from 'leva';
@@ -137,17 +137,17 @@ function App() {
 	const hasIntroBeenPlayedRef = useRef(false);
 	const masterVolume = useSettings((state) => state.masterVolume);
 
-	const setFirestoreReachable = useGame((state) => state.setFirestoreReachable);
+	const setSupabaseReachable = useGame((state) => state.setSupabaseReachable);
 
 	useEffect(() => {
 		let cancelled = false;
-		probeFirestoreReachability().then((ok) => {
-			if (!cancelled) setFirestoreReachable(ok);
+		probeSupabaseReachability().then((ok) => {
+			if (!cancelled) setSupabaseReachable(ok);
 		});
 		return () => {
 			cancelled = true;
 		};
-	}, [setFirestoreReachable]);
+	}, [setSupabaseReachable]);
 
 
 	useEffect(() => {

@@ -74,7 +74,7 @@ export default function WhitelistClaimPanel() {
 							{user ? (
 								<span className="whitelist-connected">
 									Connected as @
-									{user.reloadUserInfo?.screenName || user.displayName}
+									{user.user_metadata?.user_name || user.user_metadata?.preferred_username || user.user_metadata?.name || 'USER'}
 								</span>
 							) : (
 								<button onClick={connectTwitter}>Connect Twitter</button>

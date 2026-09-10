@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllVerifications, updateVerificationStatus } from '../../firebase/whitelistService';
+import { getAllVerifications, updateVerificationStatus } from '../../supabase/whitelistService';
 
 export default function AdminDashboard() {
 	const [verifications, setVerifications] = useState([]);

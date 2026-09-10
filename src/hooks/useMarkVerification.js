@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { submitMarkVerification } from '../firebase/whitelistService';
+import { submitMarkVerification } from '../supabase/whitelistService';
 
 const loadState = () => {
 	try {

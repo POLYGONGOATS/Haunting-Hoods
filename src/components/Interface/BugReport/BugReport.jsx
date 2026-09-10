@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { addBugReport } from '../../../firebase/bugReportService';
+import { addBugReport } from '../../../supabase/bugReportService';
 import useLocalization from '../../../hooks/useLocalization';
 import { getAudioInstance } from '../../../utils/audio';
 import { getConsoleMessages } from '../../../utils/consoleLogger';

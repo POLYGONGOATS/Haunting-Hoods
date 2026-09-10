@@ -7,7 +7,7 @@ import {
 	hasUserClaimedBefore,
 	claimWhitelistSpot,
 	CLAIM_ERRORS,
-} from '../firebase/whitelistService';
+} from '../supabase/whitelistService';
 
 const useWhitelist = create((set, get) => ({
 	user: null,
@@ -78,7 +78,7 @@ const useWhitelist = create((set, get) => ({
 	resetDatabase: async () => {
 		const { user } = get();
 		if (user) {
-			const { resetMyClaim } = await import('../firebase/whitelistService');
+			const { resetMyClaim } = await import('../supabase/whitelistService');
 			await resetMyClaim(user.uid);
 			set({ alreadyClaimed: false, claimResult: null });
 			get().refreshCampaign();
@@ -95,8 +95,8 @@ const useWhitelist = create((set, get) => ({
 		set({ claiming: true, claimError: null });
 		try {
 			const result = await claimWhitelistSpot({
-				uid: user.uid,
-				twitterHandle: user.reloadUserInfo?.screenName || user.displayName,
+				uid: user.uid || user.id,
+				twitterHandle: user.user_metadata?.user_name || user.user_metadata?.preferred_username || user.user_metadata?.name || 'USER',
 				walletAddress,
 				discordUser,
 				quoteTweetLink,

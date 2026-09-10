@@ -69,7 +69,7 @@ export default function WhitelistApplication() {
 							disabled={user !== null}
 						>
 							{user 
-								? `CONNECTED: @${user.reloadUserInfo?.screenName || user.displayName || 'USER'}` 
+								? `CONNECTED: @${user.user_metadata?.user_name || user.user_metadata?.preferred_username || user.user_metadata?.name || 'USER'}` 
 								: 'CONNECT X (TWITTER)'
 							}
 						</button>

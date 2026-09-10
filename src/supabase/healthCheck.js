@@ -1,5 +1,4 @@
-import { db } from './config';
-import { collection, query, limit, getDocsFromServer } from 'firebase/firestore';
+import { supabase, isSupabaseConfigured } from './config';
 
 const PROBE_TIMEOUT_MS = 5000;
 const PROBE_COLLECTION = 'guestbook';
@@ -7,7 +6,9 @@ const PROBE_COLLECTION = 'guestbook';
 let cachedResult = null;
 let pendingProbe = null;
 
-export const probeFirestoreReachability = () => {
+export const probeSupabaseReachability = () => {
+	if (!isSupabaseConfigured) return Promise.resolve(false);
+	
 	if (cachedResult !== null) {
 		return Promise.resolve(cachedResult);
 	}
@@ -17,11 +18,11 @@ export const probeFirestoreReachability = () => {
 
 	const probe = (async () => {
 		try {
-			const q = query(collection(db, PROBE_COLLECTION), limit(1));
+			const req = supabase.from(PROBE_COLLECTION).select('id').limit(1);
 			const timeout = new Promise((_, reject) =>
-				setTimeout(() => reject(new Error('firestore-probe-timeout')), PROBE_TIMEOUT_MS)
+				setTimeout(() => reject(new Error('supabase-probe-timeout')), PROBE_TIMEOUT_MS)
 			);
-			await Promise.race([getDocsFromServer(q), timeout]);
+			await Promise.race([req, timeout]);
 			cachedResult = true;
 		} catch {
 			cachedResult = false;

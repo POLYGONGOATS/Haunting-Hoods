@@ -40,7 +40,7 @@ const useGameStore = create(
 		setShouldRenderThreeJs: (value) => set({ shouldRenderThreeJs: value }),
 
 		firestoreReachable: null,
-		setFirestoreReachable: (value) => set({ firestoreReachable: value }),
+		setSupabaseReachable: (value) => set({ firestoreReachable: value }),
 
 		setSeedData: (newSeedData) => {
 			set({ seedData: newSeedData });

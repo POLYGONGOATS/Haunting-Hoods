@@ -18,7 +18,7 @@ import {
 	addGuestBookEntry,
 	NAME_VALIDATION_RULES,
 	isValidPlayerName,
-} from '../../../firebase/guestBookService';
+} from '../../../supabase/guestBookService';
 
 const StaticTrianglePattern = ({ position = 'left' }) => {
 	const transform = position.includes('right') ? 'scale(-1, 1)' : '';

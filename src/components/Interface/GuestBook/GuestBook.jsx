@@ -11,7 +11,7 @@ import {
 	getSpecificPage,
 	findPageByPlayerName,
 	PAGE_SIZE,
-} from '../../../firebase/guestBookService';
+} from '../../../supabase/guestBookService';
 import './GuestBook.css';
 
 function GuestBookContent({ onClose }) {

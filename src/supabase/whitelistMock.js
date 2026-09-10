@@ -60,7 +60,7 @@ export const mockSignInWithTwitter = async () => {
 	const user = {
 		uid: `mock-${handle}`,
 		displayName: handle,
-		reloadUserInfo: { screenName: handle },
+		user_metadata: { user_name: handle },
 	};
 	writeJSON(STORAGE_KEYS.user, user);
 	listeners.forEach((cb) => cb(user));
