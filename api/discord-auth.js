@@ -75,38 +75,45 @@ export default async function handler(req, res) {
 		}
 
 		// 5. Success - user verified! 
-		// Now we would securely save to Firebase. 
-		// Because this is a serverless function, we should use the Firebase Admin SDK to bypass security rules.
+		// Now we securely save to Supabase using the Service Role Key to bypass RLS.
 		
-		const admin = await import('firebase-admin');
+		const { createClient } = await import('@supabase/supabase-js');
 		
-		if (!admin.apps.length) {
-			admin.initializeApp({
-				credential: admin.credential.cert({
-					projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-					clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-					// Replace literal \n with actual newlines
-					privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-				}),
-			});
+		const supabaseUrl = process.env.VITE_SUPABASE_URL;
+		const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+		if (!supabaseUrl || !supabaseServiceKey) {
+			return res.status(500).json({ error: 'Server configuration error: Missing Supabase credentials' });
 		}
 
-		const db = admin.firestore();
-		
-		// Use Discord ID as the document ID to prevent multiple entries
-		const entryRef = db.collection('raffle_entries').doc(discordId);
-		const doc = await entryRef.get();
-		
-		if (doc.exists) {
+		const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+		// Check if entry exists
+		const { data: existingEntry } = await supabase
+			.from('raffle_entries')
+			.select('discordid')
+			.eq('discordid', discordId)
+			.single();
+
+		if (existingEntry) {
 			return res.status(400).json({ error: 'You have already entered the raffle!' });
 		}
 
-		await entryRef.set({
-			discordId,
-			discordUsername: userData.username,
-			walletAddress: walletAddress.trim(),
-			createdAt: admin.firestore.FieldValue.serverTimestamp(),
-		});
+		// Insert new entry
+		const { error: insertError } = await supabase
+			.from('raffle_entries')
+			.insert({
+				discordid: discordId,
+				data: {
+					discordUsername: userData.username,
+					walletAddress: walletAddress.trim(),
+				}
+			});
+
+		if (insertError) {
+			console.error('Supabase Insert Error:', insertError);
+			return res.status(500).json({ error: 'Failed to save raffle entry' });
+		}
 
 		return res.status(200).json({ success: true, message: 'Successfully entered the raffle!' });
 

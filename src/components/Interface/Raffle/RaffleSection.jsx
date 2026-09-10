@@ -31,9 +31,10 @@ const CountdownTimer = ({ endTimeMs }) => {
 
 export default function RaffleSection() {
 	const [isConnecting, setIsConnecting] = useState(false);
-	const [status, setStatus] = useState(null); // 'checking', 'success', 'error'
+	const [status, setStatus] = useState(null); // 'checking', 'success', 'error', 'ready'
 	const [errorMessage, setErrorMessage] = useState('');
 	const [walletAddress, setWalletAddress] = useState('');
+	const [discordCode, setDiscordCode] = useState(null);
 
 	useEffect(() => {
 		// Check for OAuth callback
@@ -42,7 +43,8 @@ export default function RaffleSection() {
 		const state = urlParams.get('state');
 
 		if (code && state === 'discord-raffle') {
-			verifyDiscordRole(code);
+			setDiscordCode(code);
+			setStatus('ready');
 			// Clean up URL
 			window.history.replaceState({}, document.title, window.location.pathname);
 		}
@@ -96,6 +98,7 @@ export default function RaffleSection() {
 			if (!response.ok) {
 				setErrorMessage(data.error || 'Verification failed.');
 				setStatus('error');
+				setDiscordCode(null); // Reset on error so they have to verify again
 			} else {
 				setStatus('success');
 			}
@@ -103,6 +106,7 @@ export default function RaffleSection() {
 			console.error('Raffle entry error:', error);
 			setErrorMessage('Network error while verifying Discord role.');
 			setStatus('error');
+			setDiscordCode(null);
 		}
 	};
 
@@ -122,9 +126,11 @@ export default function RaffleSection() {
 						<span>ACTIVE RAFFLES</span>
 					</div>
 					<div style={{ padding: '2.5rem 1.5rem', textAlign: 'center' }}>
-						<p style={{ color: '#9146FF', fontFamily: '"Space Mono", monospace', fontSize: '0.7rem', letterSpacing: '0.2em', margin: '0 0 0.6rem' }}>INCOMING</p>
-						<p style={{ color: '#f5f5f5', fontSize: '1.1rem', margin: '0 0 0.5rem', letterSpacing: '0.05em' }}>Stay tuned.</p>
-						<p style={{ color: '#747474', fontSize: '0.82rem', letterSpacing: '0.08em', margin: 0 }}>Projects are lined up.</p>
+						<p style={{ color: '#9146FF', fontFamily: '"Space Mono", monospace', fontSize: '0.7rem', letterSpacing: '0.2em', margin: '0 0 0.6rem' }}>REWARD: [REDACTED]</p>
+						<p style={{ color: '#f5f5f5', fontSize: '2.5rem', margin: '0 0 0.5rem', letterSpacing: '0.05em' }}>
+							<CountdownTimer endTimeMs={1789131728000} /> {/* 24 hours from now */}
+						</p>
+						<p style={{ color: '#747474', fontSize: '0.82rem', letterSpacing: '0.08em', margin: 0 }}>Raffle ends soon. OG Pass required.</p>
 					</div>
 				</div>
 
@@ -144,7 +150,7 @@ export default function RaffleSection() {
 							placeholder="Submit your ETH address..." 
 							value={walletAddress}
 							onChange={(e) => setWalletAddress(e.target.value)}
-							disabled={status === 'success' || status === 'checking'}
+							disabled={status === 'success' || status === 'checking' || status === 'ready'}
 						/>
 					</div>
 				</div>
@@ -158,6 +164,15 @@ export default function RaffleSection() {
 				{status === 'success' ? (
 					<button className="wl-submit-btn claimed" disabled style={{ backgroundColor: '#9146FF', color: 'white', border: '1px solid #9146FF' }}>
 						SUCCESSFULLY ENTERED RAFFLE <span>✓</span>
+					</button>
+				) : (status === 'ready' || (status === 'checking' && discordCode)) ? (
+					<button 
+						className="wl-submit-btn" 
+						onClick={() => verifyDiscordRole(discordCode)}
+						disabled={status === 'checking'}
+						style={{ backgroundColor: '#9146FF', borderColor: '#9146FF', color: 'white' }}
+					>
+						{status === 'checking' ? 'ENTERING...' : 'PARTICIPATE'} <span>✦</span>
 					</button>
 				) : (
 					<button 
