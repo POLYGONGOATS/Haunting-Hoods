@@ -56,12 +56,6 @@ export default function RaffleSection() {
 	}, []);
 
 	const handleDiscordConnect = () => {
-		if (!walletAddress || !walletAddress.trim()) {
-			setErrorMessage('Please enter your wallet address first.');
-			setStatus('error');
-			return;
-		}
-
 		setIsConnecting(true);
 		
 		const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
@@ -75,17 +69,20 @@ export default function RaffleSection() {
 		const redirectUri = encodeURIComponent(window.location.origin);
 		const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds.members.read&state=discord-raffle`;
 		
-		// Save wallet to local storage so we have it after redirect
-		localStorage.setItem('raffle_wallet', walletAddress);
-		
 		window.location.href = oauthUrl;
 	};
 
 	const verifyDiscordRole = async (code) => {
+		if (!walletAddress || !walletAddress.trim()) {
+			setErrorMessage('Please enter your wallet address.');
+			return;
+		}
+
 		setStatus('checking');
 		setErrorMessage('');
 		
-		const savedWallet = localStorage.getItem('raffle_wallet') || '';
+		const savedWallet = walletAddress.trim();
+		localStorage.setItem('raffle_wallet', savedWallet);
 		
 		try {
 			const response = await fetch('/api/discord-auth', {
@@ -147,26 +144,28 @@ export default function RaffleSection() {
 					</div>
 				</div>
 
-				<div className="wl-details-section">
-					<div className="wl-details-header" style={{ color: '#9146FF' }}>
-						<span>YOUR DETAILS</span>
-					</div>
-					
-					<div className="wl-address-input-group" style={{ marginTop: '0', paddingTop: '0', borderTop: 'none' }}>
-						<div className="wl-address-label">
-							<strong>WALLET ADDRESS</strong>
-							<span>where we drop the spoils</span>
+				{(status === 'ready' || status === 'checking' || status === 'success') && (
+					<div className="wl-details-section">
+						<div className="wl-details-header" style={{ color: '#9146FF' }}>
+							<span>YOUR DETAILS</span>
 						</div>
-						<input 
-							type="text" 
-							className="wl-address-input" 
-							placeholder="Submit your ETH address..." 
-							value={walletAddress}
-							onChange={(e) => setWalletAddress(e.target.value)}
-							disabled={status === 'success' || status === 'checking' || status === 'ready'}
-						/>
+						
+						<div className="wl-address-input-group" style={{ marginTop: '0', paddingTop: '0', borderTop: 'none' }}>
+							<div className="wl-address-label">
+								<strong>WALLET ADDRESS</strong>
+								<span>where we drop the spoils</span>
+							</div>
+							<input 
+								type="text" 
+								className="wl-address-input" 
+								placeholder="Submit your ETH address..." 
+								value={walletAddress}
+								onChange={(e) => setWalletAddress(e.target.value)}
+								disabled={status === 'success' || status === 'checking'}
+							/>
+						</div>
 					</div>
-				</div>
+				)}
 
 				{status === 'error' && (
 					<div className="wl-error" style={{color: '#ff4d4d', marginTop: '1rem', textAlign: 'center'}}>
@@ -182,7 +181,7 @@ export default function RaffleSection() {
 					<button 
 						className="wl-submit-btn" 
 						onClick={() => verifyDiscordRole(discordCode)}
-						disabled={status === 'checking'}
+						disabled={status === 'checking' || !walletAddress.trim()}
 						style={{ backgroundColor: '#9146FF', borderColor: '#9146FF', color: 'white' }}
 					>
 						{status === 'checking' ? 'ENTERING...' : 'PARTICIPATE'} <span>✦</span>
@@ -191,7 +190,7 @@ export default function RaffleSection() {
 					<button 
 						className="wl-submit-btn" 
 						onClick={handleDiscordConnect}
-						disabled={status === 'checking' || isConnecting || !walletAddress.trim()}
+						disabled={status === 'checking' || isConnecting}
 						style={{ backgroundColor: 'transparent', borderColor: '#9146FF', color: '#9146FF' }}
 					>
 						{status === 'checking' || isConnecting ? 'VERIFYING...' : 'VERIFY DISCORD ROLE'} <span>✦</span>
