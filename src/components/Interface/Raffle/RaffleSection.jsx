@@ -37,6 +37,11 @@ export default function RaffleSection() {
 	const [discordCode, setDiscordCode] = useState(null);
 
 	useEffect(() => {
+		if (localStorage.getItem('raffle_entered') === 'true') {
+			setStatus('success');
+			return;
+		}
+
 		// Check for OAuth callback
 		const urlParams = new URLSearchParams(window.location.search);
 		const code = urlParams.get('code');
@@ -96,11 +101,19 @@ export default function RaffleSection() {
 			const data = await response.json();
 			
 			if (!response.ok) {
-				setErrorMessage(data.error || 'Verification failed.');
-				setStatus('error');
-				setDiscordCode(null); // Reset on error so they have to verify again
+				// If they already entered (e.g. from a different browser session but same discord account), 
+				// treat it as a success so they see the checkmark instead of an error
+				if (data.error && data.error.includes('already entered')) {
+					setStatus('success');
+					localStorage.setItem('raffle_entered', 'true');
+				} else {
+					setErrorMessage(data.error || 'Verification failed.');
+					setStatus('error');
+					setDiscordCode(null); // Reset on error so they have to verify again
+				}
 			} else {
 				setStatus('success');
+				localStorage.setItem('raffle_entered', 'true');
 			}
 		} catch (error) {
 			console.error('Raffle entry error:', error);
