@@ -32,8 +32,8 @@ export default function MarkVerification() {
 	const hasMark = collectedSigils.length >= 4 && markCode;
 
 	useEffect(() => {
-		const START_TIME = new Date('2026-09-09T20:00:00+05:30').getTime();
-		const END_TIME = START_TIME + 72 * 60 * 60 * 1000;
+		const START_TIME = new Date('2026-09-11T23:00:00+05:30').getTime();
+		const END_TIME = START_TIME + 24 * 60 * 60 * 1000;
 
 		const interval = setInterval(() => {
 			const now = Date.now();
