@@ -83,7 +83,7 @@ export default function RaffleRewardChecker() {
 	};
 
 	const handleTweetClick = () => {
-		const tweetText = `I have got ${reward}, privileged being an holder of Haunting Hoods OG.\n\n#HauntingHoods #OGPass`;
+		const tweetText = `I have got ${reward}, privileged being an holder of @haunting_hood OG.\n\n#HauntingHoods #OGPass`;
 		const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 		window.open(url, '_blank');
 		
