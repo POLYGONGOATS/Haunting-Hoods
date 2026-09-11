@@ -26,6 +26,7 @@ export default function RaffleRewardChecker() {
 	const [status, setStatus] = useState(null);
 	const [reward, setReward] = useState('');
 	const [error, setError] = useState('');
+	const [claimStep, setClaimStep] = useState(0); // 0: initial, 1: twitter, 2: discord
 
 	const checkReward = async () => {
 		if (!address || !address.trim()) {
@@ -37,6 +38,7 @@ export default function RaffleRewardChecker() {
 		setStatus('checking');
 		setError('');
 		setReward('');
+		setClaimStep(0);
 		
 		const cleanAddress = address.trim().toLowerCase();
 
@@ -74,6 +76,21 @@ export default function RaffleRewardChecker() {
 				setStatus('error');
 			}
 		}, 800); // Artificial delay for spooky suspense
+	};
+
+	const handleClaimInitiate = () => {
+		setClaimStep(1);
+	};
+
+	const handleTweetClick = () => {
+		const tweetText = `I have got ${reward}, privileged being an holder of Haunting Hoods OG.\n\n#HauntingHoods #OGPass`;
+		const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+		window.open(url, '_blank');
+		
+		// Advance to next step after they click tweet
+		setTimeout(() => {
+			setClaimStep(2);
+		}, 1000);
 	};
 
 	return (
@@ -141,8 +158,91 @@ export default function RaffleRewardChecker() {
 							marginBottom: '2rem',
 							boxShadow: '0 0 20px rgba(255, 77, 77, 0.2) inset'
 						}}>
-							<h3 style={{ color: '#ff4d4d', fontSize: '1.8rem', margin: '0 0 1rem', letterSpacing: '0.1em' }}>YOU HAVE BEEN CHOSEN.</h3>
-							<p style={{ color: '#fff', fontSize: '1.3rem', margin: 0, fontFamily: '"Space Mono", monospace' }}>{reward}</p>
+							{claimStep === 0 && (
+								<>
+									<h3 style={{ color: '#ff4d4d', fontSize: '1.8rem', margin: '0 0 1rem', letterSpacing: '0.1em' }}>YOU HAVE BEEN CHOSEN.</h3>
+									<p style={{ color: '#fff', fontSize: '1.3rem', margin: '0 0 1.5rem', fontFamily: '"Space Mono", monospace' }}>{reward}</p>
+									<button 
+										onClick={handleClaimInitiate}
+										style={{
+											background: '#ff4d4d',
+											color: '#111',
+											border: 'none',
+											padding: '0.8rem 2rem',
+											fontSize: '0.9rem',
+											letterSpacing: '0.15em',
+											cursor: 'pointer',
+											fontWeight: 'bold',
+											transition: 'all 0.2s',
+											boxShadow: '0 0 15px rgba(255, 77, 77, 0.4)'
+										}}
+										onMouseEnter={e => e.target.style.boxShadow = '0 0 25px rgba(255, 77, 77, 0.8)'}
+										onMouseLeave={e => e.target.style.boxShadow = '0 0 15px rgba(255, 77, 77, 0.4)'}
+									>
+										CLAIM REWARD
+									</button>
+								</>
+							)}
+
+							{claimStep === 1 && (
+								<div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+									<h3 style={{ color: '#ff4d4d', fontSize: '1.4rem', margin: '0 0 1rem', letterSpacing: '0.1em' }}>HOLD ON.</h3>
+									<p style={{ color: '#ccc', fontSize: '0.9rem', margin: '0 0 1.5rem', fontFamily: '"Space Mono", monospace', lineHeight: 1.6 }}>
+										Before the shadows grant your request, you must spread the word.<br/>
+										Tweet your triumph to proceed.
+									</p>
+									<button 
+										onClick={handleTweetClick}
+										style={{
+											background: 'transparent',
+											color: '#1da1f2',
+											border: '1px solid #1da1f2',
+											padding: '0.8rem 2rem',
+											fontSize: '0.9rem',
+											letterSpacing: '0.15em',
+											cursor: 'pointer',
+											fontWeight: 'bold',
+											transition: 'all 0.2s'
+										}}
+										onMouseEnter={e => { e.target.style.background = '#1da1f2'; e.target.style.color = '#fff'; }}
+										onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#1da1f2'; }}
+									>
+										TWEET TO CLAIM
+									</button>
+								</div>
+							)}
+
+							{claimStep === 2 && (
+								<div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+									<h3 style={{ color: '#ff4d4d', fontSize: '1.4rem', margin: '0 0 1rem', letterSpacing: '0.1em' }}>THE FINAL STEP.</h3>
+									<p style={{ color: '#ccc', fontSize: '0.9rem', margin: '0 0 1.5rem', fontFamily: '"Space Mono", monospace', lineHeight: 1.6 }}>
+										Create a ticket in the official Discord and show proof of your tweet to the admins.<br/>
+										Your reward will be bestowed upon you.
+									</p>
+									<a 
+										href="https://discord.gg/hauntinghoods" 
+										target="_blank" 
+										rel="noopener noreferrer"
+										style={{
+											display: 'inline-block',
+											background: '#5865F2',
+											color: '#fff',
+											textDecoration: 'none',
+											border: 'none',
+											padding: '0.8rem 2rem',
+											fontSize: '0.9rem',
+											letterSpacing: '0.15em',
+											cursor: 'pointer',
+											fontWeight: 'bold',
+											transition: 'all 0.2s'
+										}}
+										onMouseEnter={e => e.target.style.background = '#4752C4'}
+										onMouseLeave={e => e.target.style.background = '#5865F2'}
+									>
+										OPEN DISCORD
+									</a>
+								</div>
+							)}
 						</div>
 					)}
 					
@@ -170,22 +270,31 @@ export default function RaffleRewardChecker() {
 						</div>
 					)}
 
-					<button 
-						className="wl-submit-btn" 
-						onClick={checkReward}
-						disabled={status === 'checking' || !address.trim()}
-						style={{ 
-							backgroundColor: status === 'checking' ? 'transparent' : '#451717', 
-							borderColor: '#ff4d4d', 
-							color: status === 'checking' ? '#ff4d4d' : 'white',
-							transition: 'all 0.3s ease',
-							opacity: (!address.trim() && status !== 'checking') ? 0.5 : 1
-						}}
-					>
-						{status === 'checking' ? 'SEARCHING ARCHIVES...' : 'INVOKE CHECK'}
-					</button>
+					{status !== 'winner' && (
+						<button 
+							className="wl-submit-btn" 
+							onClick={checkReward}
+							disabled={status === 'checking' || !address.trim()}
+							style={{ 
+								backgroundColor: status === 'checking' ? 'transparent' : '#451717', 
+								borderColor: '#ff4d4d', 
+								color: status === 'checking' ? '#ff4d4d' : 'white',
+								transition: 'all 0.3s ease',
+								opacity: (!address.trim() && status !== 'checking') ? 0.5 : 1
+							}}
+						>
+							{status === 'checking' ? 'SEARCHING ARCHIVES...' : 'INVOKE CHECK'}
+						</button>
+					)}
 				</div>
 			</div>
+			
+			<style>{`
+				@keyframes fadeIn {
+					from { opacity: 0; transform: translateY(10px); }
+					to { opacity: 1; transform: translateY(0); }
+				}
+			`}</style>
 		</section>
 	);
 }
