@@ -3,6 +3,7 @@ import useWhitelist from '../hooks/useWhitelist';
 import WhitelistClaimPanel from './Interface/Whitelist/WhitelistClaimPanel';
 import WhitelistApplication from './Interface/Whitelist/WhitelistApplication';
 import RaffleSection from './Interface/Raffle/RaffleSection';
+import RaffleRewardChecker from './Interface/Raffle/RaffleRewardChecker';
 import HoodCarousel from './Interface/HoodCarousel/HoodCarousel';
 import SigilPlacement from './Interface/Story/SigilPlacement';
 import './LandingPage.css';
@@ -84,6 +85,7 @@ export default function LandingPage() {
 
 				<WhitelistApplication />
 				<RaffleSection />
+				<RaffleRewardChecker />
 			</main>
 
 			<footer className="landing-footer">
