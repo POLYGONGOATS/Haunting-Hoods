@@ -182,7 +182,7 @@ export default function RaffleRewardChecker() {
 							opacity: (!address.trim() && status !== 'checking') ? 0.5 : 1
 						}}
 					>
-						{status === 'checking' ? 'SEARCHING ARCHIVES...' : 'INVOKE CHECK'} <span>✦</span>
+						{status === 'checking' ? 'SEARCHING ARCHIVES...' : 'INVOKE CHECK'}
 					</button>
 				</div>
 			</div>
