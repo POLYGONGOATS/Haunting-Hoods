@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../../../supabase/config';
+import SigilPlacement from '../Story/SigilPlacement';
+import './RaffleSection.css'; // Reuse some of the styling if possible, but mostly inline
 
 const WINNERS = {
 	"0x345e1a371a0a5a021ac29075ff5f624560bf3821": "🍎 $15 Worth of Apple Inc. (AAPL) Stock",
@@ -21,13 +23,13 @@ const WINNERS = {
 
 export default function RaffleRewardChecker() {
 	const [address, setAddress] = useState('');
-	const [status, setStatus] = useState(null); // 'idle', 'checking', 'winner', 'loser', 'not_found', 'error'
+	const [status, setStatus] = useState(null);
 	const [reward, setReward] = useState('');
 	const [error, setError] = useState('');
 
 	const checkReward = async () => {
 		if (!address || !address.trim()) {
-			setError('Please enter a wallet address.');
+			setError('A WALLET ADDRESS IS REQUIRED.');
 			setStatus('error');
 			return;
 		}
@@ -38,98 +40,133 @@ export default function RaffleRewardChecker() {
 		
 		const cleanAddress = address.trim().toLowerCase();
 
-		// 1. Check if they are a winner
-		if (WINNERS[cleanAddress]) {
-			setReward(WINNERS[cleanAddress]);
-			setStatus('winner');
-			return;
-		}
-
-		// 2. Not a winner, check if they actually entered the raffle
-		try {
-			if (!supabase) {
-				// Fallback if supabase isn't configured locally
-				setStatus('not_found');
+		setTimeout(async () => {
+			if (WINNERS[cleanAddress]) {
+				setReward(WINNERS[cleanAddress]);
+				setStatus('winner');
 				return;
 			}
-			
-			// We have to fetch and filter locally since JSONB querying can be finicky depending on the exact schema
-			// This is fine since it's a small dataset for a raffle
-			const { data: entries, error: fetchError } = await supabase
-				.from('raffle_entries')
-				.select('data');
-				
-			if (fetchError) throw fetchError;
-			
-			const didEnter = entries?.some(entry => 
-				entry.data?.walletAddress?.toLowerCase() === cleanAddress
-			);
 
-			if (didEnter) {
-				setStatus('loser');
-			} else {
-				setStatus('not_found');
+			try {
+				if (!supabase) {
+					setStatus('not_found');
+					return;
+				}
+				
+				const { data: entries, error: fetchError } = await supabase
+					.from('raffle_entries')
+					.select('data');
+					
+				if (fetchError) throw fetchError;
+				
+				const didEnter = entries?.some(entry => 
+					entry.data?.walletAddress?.toLowerCase() === cleanAddress
+				);
+
+				if (didEnter) {
+					setStatus('loser');
+				} else {
+					setStatus('not_found');
+				}
+			} catch (err) {
+				console.error('Error checking raffle entries:', err);
+				setError('THE ARCHIVES ARE CORRUPTED. TRY AGAIN.');
+				setStatus('error');
 			}
-		} catch (err) {
-			console.error('Error checking raffle entries:', err);
-			setError('Error checking database. Please try again.');
-			setStatus('error');
-		}
+		}, 800); // Artificial delay for spooky suspense
 	};
 
 	return (
-		<section className="wl-application-section" id="raffle-rewards" style={{ paddingTop: '1rem', marginTop: '2rem' }}>
-			<div className="wl-app-container">
+		<section className="wl-application-section" id="raffle-rewards" style={{ paddingTop: '1rem' }}>
+			<div className="wl-app-container" style={{ 
+				border: '1px solid rgba(255, 77, 77, 0.2)', 
+				background: 'rgba(10, 0, 0, 0.6)', 
+				backdropFilter: 'blur(10px)',
+				boxShadow: '0 0 40px rgba(138, 3, 3, 0.1)',
+				position: 'relative'
+			}}>
+				<SigilPlacement spotId="rewards-top-right" style={{ position: 'absolute', top: '20px', right: '20px', opacity: 0.5 }} />
+				
 				<div className="wl-app-header">
-					<p className="eyebrow" style={{ color: '#9146FF' }}>RAFFLE RESULTS</p>
-					<h2>CHECK REWARDS.</h2>
-					<p className="wl-app-subtitle">
-						Enter your wallet address to see if you secured a reward from the OG Partner Raffle.
+					<p className="eyebrow" style={{ color: '#ff4d4d', letterSpacing: '0.4em' }}>THE VERDICT</p>
+					<h2 style={{ textShadow: '0 0 10px rgba(255, 77, 77, 0.5)' }}>CHECK REWARDS.</h2>
+					<p className="wl-app-subtitle" style={{ color: '#aaa' }}>
+						Present your wallet address to see what the shadows have left for you.
 					</p>
 				</div>
 
-				<div className="wl-details-section">
-					<div className="wl-address-input-group" style={{ marginTop: '0', paddingTop: '0', borderTop: 'none' }}>
+				<div className="wl-details-section" style={{ borderTop: '1px solid rgba(255, 77, 77, 0.2)' }}>
+					<div className="wl-address-input-group" style={{ marginTop: '0', paddingTop: '1rem', borderTop: 'none' }}>
 						<div className="wl-address-label">
-							<strong>WALLET ADDRESS</strong>
-							<span>check your status</span>
+							<strong style={{ color: '#ff4d4d' }}>WALLET ADDRESS</strong>
+							<span style={{ color: '#747474' }}>reveal your fate</span>
 						</div>
 						<input 
 							type="text" 
 							className="wl-address-input" 
-							placeholder="Paste your ETH address..." 
+							placeholder="Submit your ETH address..." 
 							value={address}
 							onChange={(e) => setAddress(e.target.value)}
 							disabled={status === 'checking'}
+							style={{ 
+								background: 'rgba(0,0,0,0.5)', 
+								borderColor: 'rgba(255, 77, 77, 0.3)',
+								color: '#f5f5f5'
+							}}
+							onFocus={(e) => e.target.style.borderColor = '#ff4d4d'}
+							onBlur={(e) => e.target.style.borderColor = 'rgba(255, 77, 77, 0.3)'}
 						/>
 					</div>
 				</div>
 
 				{status === 'error' && (
-					<div className="wl-error" style={{color: '#ff4d4d', marginTop: '1rem', textAlign: 'center'}}>
-						{error}
+					<div className="wl-error" style={{
+						color: '#ff4d4d', 
+						marginTop: '1rem', 
+						textAlign: 'center', 
+						fontFamily: '"Space Mono", monospace',
+						letterSpacing: '0.1em',
+						textShadow: '0 0 5px rgba(255, 77, 77, 0.5)'
+					}}>
+						[ERROR] {error}
 					</div>
 				)}
 
-				<div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+				<div style={{ marginTop: '2rem', textAlign: 'center' }}>
 					{status === 'winner' && (
-						<div style={{ padding: '2rem', border: '1px solid #00e676', backgroundColor: 'rgba(0, 230, 118, 0.1)', marginBottom: '1.5rem' }}>
-							<h3 style={{ color: '#00e676', fontSize: '1.5rem', margin: '0 0 1rem' }}>🎉 YOU WON! 🎉</h3>
-							<p style={{ color: '#fff', fontSize: '1.2rem', margin: 0 }}>{reward}</p>
+						<div style={{ 
+							padding: '2.5rem', 
+							border: '1px solid #ff4d4d', 
+							backgroundColor: 'rgba(69, 23, 23, 0.4)', 
+							marginBottom: '2rem',
+							boxShadow: '0 0 20px rgba(255, 77, 77, 0.2) inset'
+						}}>
+							<h3 style={{ color: '#ff4d4d', fontSize: '1.8rem', margin: '0 0 1rem', letterSpacing: '0.1em' }}>YOU HAVE BEEN CHOSEN.</h3>
+							<p style={{ color: '#fff', fontSize: '1.3rem', margin: 0, fontFamily: '"Space Mono", monospace' }}>{reward}</p>
 						</div>
 					)}
 					
 					{status === 'loser' && (
-						<div style={{ padding: '2rem', border: '1px solid #ff4d4d', backgroundColor: 'rgba(255, 77, 77, 0.1)', marginBottom: '1.5rem' }}>
-							<h3 style={{ color: '#ff4d4d', fontSize: '1.2rem', margin: '0 0 0.5rem' }}>BETTER LUCK NEXT TIME.</h3>
-							<p style={{ color: '#aaa', fontSize: '0.9rem', margin: 0 }}>Your entry was found, but you didn't win this time.</p>
+						<div style={{ 
+							padding: '2.5rem', 
+							border: '1px solid #3a3a3a', 
+							backgroundColor: 'rgba(10, 10, 10, 0.8)', 
+							marginBottom: '2rem'
+						}}>
+							<h3 style={{ color: '#747474', fontSize: '1.2rem', margin: '0 0 0.8rem', letterSpacing: '0.1em' }}>THE SHADOWS REMAIN EMPTY.</h3>
+							<p style={{ color: '#555', fontSize: '0.9rem', margin: 0, fontFamily: '"Space Mono", monospace' }}>Your entry was found, but you secured no reward this time.</p>
 						</div>
 					)}
 
 					{status === 'not_found' && (
-						<div style={{ padding: '2rem', border: '1px solid #747474', backgroundColor: 'rgba(116, 116, 116, 0.1)', marginBottom: '1.5rem' }}>
-							<h3 style={{ color: '#747474', fontSize: '1.2rem', margin: '0 0 0.5rem' }}>ENTRY NOT FOUND.</h3>
-							<p style={{ color: '#aaa', fontSize: '0.9rem', margin: 0 }}>We couldn't find this wallet address in the raffle entries.</p>
+						<div style={{ 
+							padding: '2.5rem', 
+							border: '1px dashed #ff4d4d', 
+							backgroundColor: 'rgba(255, 77, 77, 0.05)', 
+							marginBottom: '2rem'
+						}}>
+							<h3 style={{ color: '#ff4d4d', fontSize: '1.2rem', margin: '0 0 0.8rem', letterSpacing: '0.1em' }}>UNKNOWN ENTITY.</h3>
+							<p style={{ color: '#747474', fontSize: '0.9rem', margin: 0, fontFamily: '"Space Mono", monospace' }}>This wallet does not exist in the raffle archives.</p>
 						</div>
 					)}
 
@@ -137,9 +174,15 @@ export default function RaffleRewardChecker() {
 						className="wl-submit-btn" 
 						onClick={checkReward}
 						disabled={status === 'checking' || !address.trim()}
-						style={{ backgroundColor: '#9146FF', borderColor: '#9146FF', color: 'white', opacity: status === 'checking' ? 0.7 : 1 }}
+						style={{ 
+							backgroundColor: status === 'checking' ? 'transparent' : '#451717', 
+							borderColor: '#ff4d4d', 
+							color: status === 'checking' ? '#ff4d4d' : 'white',
+							transition: 'all 0.3s ease',
+							opacity: (!address.trim() && status !== 'checking') ? 0.5 : 1
+						}}
 					>
-						{status === 'checking' ? 'CHECKING...' : 'CHECK ELIGIBILITY'} <span>✦</span>
+						{status === 'checking' ? 'SEARCHING ARCHIVES...' : 'INVOKE CHECK'} <span>✦</span>
 					</button>
 				</div>
 			</div>
