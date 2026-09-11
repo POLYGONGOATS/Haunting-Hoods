@@ -142,6 +142,25 @@ export default function RaffleSection() {
 						</p>
 						<p style={{ color: '#747474', fontSize: '0.82rem', letterSpacing: '0.08em', margin: 0 }}>Raffle ends soon. OG Pass required.</p>
 					</div>
+					
+					<div style={{ padding: '1rem', borderTop: '1px solid rgba(145, 70, 255, 0.2)', textAlign: 'center' }}>
+						<a href="/rewards" style={{ 
+							display: 'inline-block', 
+							padding: '0.8rem 1.5rem', 
+							background: 'rgba(145, 70, 255, 0.1)', 
+							color: '#9146FF', 
+							textDecoration: 'none', 
+							fontSize: '0.8rem', 
+							letterSpacing: '0.15em', 
+							border: '1px solid #9146FF',
+							transition: 'all 0.2s ease'
+						}}
+						onMouseEnter={(e) => { e.target.style.background = '#9146FF'; e.target.style.color = '#fff'; }}
+						onMouseLeave={(e) => { e.target.style.background = 'rgba(145, 70, 255, 0.1)'; e.target.style.color = '#9146FF'; }}
+						>
+							CHECK REWARDS <span>✦</span>
+						</a>
+					</div>
 				</div>
 
 				{(status === 'ready' || status === 'checking' || status === 'success') && (
