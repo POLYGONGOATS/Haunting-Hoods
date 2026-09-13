@@ -115,10 +115,12 @@ const useSealEngine = create(
 					} else {
 						// Handle error (e.g. already broken)
 						console.error(result.error);
+						alert(`Failed to feed engine: ${result.error || 'Unknown error'}`);
 						set({ machineState: 'idle' });
 					}
 				} catch (error) {
 					console.error("Error feeding engine:", error);
+					alert(`Database error: ${error.message || 'Please check your connection and Supabase permissions.'}`);
 					set({ machineState: 'idle' });
 				}
 			},
@@ -128,7 +130,7 @@ const useSealEngine = create(
 			}
 		}),
 		{
-			name: 'seal-engine-storage',
+			name: 'seal-engine-storage-v2',
 			partialize: (state) => ({ 
 				userMarks: state.userMarks,
 				foundHoods: state.foundHoods,
