@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import useWhitelist from '../../../hooks/useWhitelist';
-import SigilPlacement from '../Story/SigilPlacement';
 import './WhitelistApplication.css';
 
 const tasks = [
@@ -48,7 +47,7 @@ export default function WhitelistApplication() {
 		<section className="wl-application-section" id="whitelist">
 			<div className="wl-app-container">
 				<div className="wl-app-header">
-					<SigilPlacement spotId="whitelist-form" style={{position: 'absolute', top: '1rem', right: '1rem'}} />
+					
 					<p className="eyebrow">APPLICATION</p>
 					<h2>SECURE YOUR SPOT.</h2>
 					<p className="wl-app-subtitle">
@@ -200,7 +199,7 @@ export default function WhitelistApplication() {
 						{claiming ? 'SUBMITTING...' : 'APPLY FOR WHITELIST'} <span>✦</span>
 					</button>
 				)}
-				<SigilPlacement spotId="whitelist-footer" style={{marginTop: '2rem', display: 'block', textAlign: 'center'}} />
+				
 			</div>
 		</section>
 	);

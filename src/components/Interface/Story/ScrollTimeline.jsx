@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import SigilPlacement from './SigilPlacement';
 import './LoreTimeline.css';
 
 export default function ScrollTimeline({ data }) {
@@ -59,8 +58,8 @@ export default function ScrollTimeline({ data }) {
 		<section className="lore-section" ref={sectionRef}>
 			<div className="blood-vignette" />
 			<div className="lore-content-area" ref={contentRef} style={{ position: 'relative' }}>
-				<SigilPlacement spotId="lore-header" style={{position: 'absolute', top: '10%', right: '5%'}} />
-				<SigilPlacement spotId="lore-middle" style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}} />
+				
+				
 
 				<div className="lore-progress-bar" style={{ height: `${scrollProgress}%` }}>
 				</div>
@@ -100,7 +99,7 @@ export default function ScrollTimeline({ data }) {
 						</div>
 					))}
 				</div>
-				<SigilPlacement spotId="lore-footer" style={{position: 'absolute', bottom: '5%', left: '10%'}} />
+				
 			</div>
 		</section>
 	);

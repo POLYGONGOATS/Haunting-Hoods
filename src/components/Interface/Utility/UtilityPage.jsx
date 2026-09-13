@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './UtilityPage.css';
+import HoodPlacement from '../Story/HoodPlacement';
 import ScrambledText from './ScrambledText';
-import SigilPlacement from '../Story/SigilPlacement';
 
 export default function UtilityPage() {
     const [scrollProgress, setScrollProgress] = useState(0);
@@ -108,12 +108,15 @@ export default function UtilityPage() {
                         <p>The earlier a Hood completes its Reckoning, the greater its potential edge when the New World begins.</p>
                         <p>And there is one final objective:</p>
                         <p>THE SANCTUM OF WHISPERS</p>
-                        <p className="utility-intro">
-                            Stake your Hood. Gather corrupted souls.
-                        </p>
-                        <div className="utility-coming-soon">
-                            <span>SYSTEM OFFLINE</span>
-                            <SigilPlacement spotId="utility-top" style={{marginTop: '2rem'}} />
+                        <div className="utility-card">
+                            <HoodPlacement spotId="utility-2" index={8} style={{ position: 'absolute', bottom: '10px', right: '10px' }} />
+                            <h3>SOUL MARKET</h3>
+                            <p>Stake your Hood. Gather corrupted souls.</p>
+                        </div>
+                        <div className="utility-intro-text">
+                            <p>IN THE BEGINNING, THE DARKNESS WAS CONTAINED.</p>
+                            <p>BUT CONTAINMENT IS AN ILLUSION.</p>
+                            <HoodPlacement spotId="utility-3" index={9} style={{ position: 'absolute', top: '10px', right: '10px' }} />
                         </div>
                     </ExpandableSection>
 
@@ -172,7 +175,7 @@ export default function UtilityPage() {
                         <p>To activate your Hood:</p>
                         <p>◆ STAKE YOUR HOOD<br/>◆ BURN THE REQUIRED AMOUNT OF<br/>   HAUNTING HOODS TOKENS</p>
                         <p>Once activated, your Hood can participate in the Faction Wars and use the Soul Forge to craft and enchant new artifacts in Phase II.</p>
-                        <SigilPlacement spotId="utility-middle" style={{marginTop: '2rem'}} />
+                        
                         <p>The activities, requirements and exact amounts will be revealed when the system goes live.</p>
                     </ExpandableSection>
 
@@ -286,9 +289,10 @@ export default function UtilityPage() {
                         <p>THE WORLD FELL.</p>
                         <p>NOW</p>
                         <h3>THE NEW WORLD BEGINS.</h3>
-                        <div className="utility-footer-note">
+                        <div className="utility-card glow-red">
+                            <HoodPlacement spotId="utility-1" index={7} style={{ position: 'absolute', top: '-15px', right: '-15px' }} />
+                            <h3>TOKENOMICS</h3>
                             <p>MORE UTILITY MECHANICS WILL BE UNSEALED SOON.</p>
-                            <SigilPlacement spotId="utility-bottom" style={{marginTop: '4rem', display: 'block'}} />
                         </div>
                     </div>
                 </section>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { supabase } from '../../../supabase/config';
-import SigilPlacement from '../Story/SigilPlacement';
 import './RaffleSection.css'; // Reuse some of the styling if possible, but mostly inline
 
 const WINNERS = {
@@ -102,7 +101,7 @@ export default function RaffleRewardChecker() {
 				boxShadow: '0 0 40px rgba(138, 3, 3, 0.1)',
 				position: 'relative'
 			}}>
-				<SigilPlacement spotId="rewards-top-right" style={{ position: 'absolute', top: '20px', right: '20px', opacity: 0.5 }} />
+				
 				
 				<div className="wl-app-header">
 					<p className="eyebrow" style={{ color: '#ff4d4d', letterSpacing: '0.4em' }}>THE VERDICT</p>
