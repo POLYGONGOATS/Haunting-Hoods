@@ -10,9 +10,17 @@ export default function EngineControls() {
 		machineState,
 		hasFoundHoods,
 		foundHoods,
-		hasDoneTwitter,
+		hasJoinedDiscord,
+		hasLikedTweet,
+		hasReposted,
+		hasCommented,
+		hasMadeTweet,
 		hasSubmittedAddress,
-		completeTwitterTask,
+		completeDiscordTask,
+		completeLikeTask,
+		completeRepostTask,
+		completeCommentTask,
+		completeMakeTweetTask,
 		completeAddressTask
 	} = useSealEngine();
 
@@ -58,30 +66,102 @@ export default function EngineControls() {
 					</div>
 				</div>
 
-				{/* Task 2: Twitter */}
-				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: hasDoneTwitter ? 0.5 : 1 }}>
+				{/* Task 2: Discord */}
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: hasJoinedDiscord ? 0.5 : 1 }}>
 					<div>
-						<div style={{ color: '#fff', fontSize: '0.9rem' }}>Share Your Mark</div>
-						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+2000 Marks</div>
+						<div style={{ color: '#fff', fontSize: '0.9rem' }}>Join Discord</div>
+						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+666 Marks</div>
 					</div>
 					<button 
-						disabled={hasDoneTwitter}
+						disabled={hasJoinedDiscord}
 						onClick={() => {
-							const text = encodeURIComponent(`I survived the darkness and uncovered 4 sealed entities. Their presence is haunting. The reckoning approaches...\n\n@Haunting_Hoods`);
-							window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
-							completeTwitterTask();
+							window.open('https://discord.gg/hauntinghoods', '_blank');
+							completeDiscordTask();
 						}}
-						style={{ background: hasDoneTwitter ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasDoneTwitter ? 'not-allowed' : 'pointer' }}
+						style={{ background: hasJoinedDiscord ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasJoinedDiscord ? 'not-allowed' : 'pointer' }}
 					>
-						{hasDoneTwitter ? 'DONE' : 'TWEET'}
+						{hasJoinedDiscord ? 'DONE' : 'JOIN'}
 					</button>
 				</div>
 
-				{/* Task 3: Address */}
+				{/* Task 3: Like Tweet */}
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: hasLikedTweet ? 0.5 : 1 }}>
+					<div>
+						<div style={{ color: '#fff', fontSize: '0.9rem' }}>Like the Tweet</div>
+						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+666 Marks</div>
+					</div>
+					<button 
+						disabled={hasLikedTweet}
+						onClick={() => {
+							window.open('https://x.com/intent/like?tweet_id=2099220934981022017', '_blank');
+							completeLikeTask();
+						}}
+						style={{ background: hasLikedTweet ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasLikedTweet ? 'not-allowed' : 'pointer' }}
+					>
+						{hasLikedTweet ? 'DONE' : 'LIKE'}
+					</button>
+				</div>
+
+				{/* Task 4: Repost */}
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: hasReposted ? 0.5 : 1 }}>
+					<div>
+						<div style={{ color: '#fff', fontSize: '0.9rem' }}>Repost</div>
+						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+666 Marks</div>
+					</div>
+					<button 
+						disabled={hasReposted}
+						onClick={() => {
+							window.open('https://x.com/intent/retweet?tweet_id=2099220934981022017', '_blank');
+							completeRepostTask();
+						}}
+						style={{ background: hasReposted ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasReposted ? 'not-allowed' : 'pointer' }}
+					>
+						{hasReposted ? 'DONE' : 'REPOST'}
+					</button>
+				</div>
+
+				{/* Task 5: Comment */}
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: hasCommented ? 0.5 : 1 }}>
+					<div>
+						<div style={{ color: '#fff', fontSize: '0.9rem' }}>Leave a Comment</div>
+						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+666 Marks</div>
+					</div>
+					<button 
+						disabled={hasCommented}
+						onClick={() => {
+							window.open('https://x.com/intent/post?in_reply_to=2099220934981022017', '_blank');
+							completeCommentTask();
+						}}
+						style={{ background: hasCommented ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasCommented ? 'not-allowed' : 'pointer' }}
+					>
+						{hasCommented ? 'DONE' : 'COMMENT'}
+					</button>
+				</div>
+
+				{/* Task 6: Make a Tweet */}
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: hasMadeTweet ? 0.5 : 1 }}>
+					<div>
+						<div style={{ color: '#fff', fontSize: '0.9rem' }}>Share Your Mark</div>
+						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+666 Marks</div>
+					</div>
+					<button 
+						disabled={hasMadeTweet}
+						onClick={() => {
+							const text = encodeURIComponent(`I survived the darkness and uncovered 4 sealed entities. Their presence is haunting. The reckoning approaches...\n\n@Haunting_Hoods`);
+							window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+							completeMakeTweetTask();
+						}}
+						style={{ background: hasMadeTweet ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasMadeTweet ? 'not-allowed' : 'pointer' }}
+					>
+						{hasMadeTweet ? 'DONE' : 'TWEET'}
+					</button>
+				</div>
+
+				{/* Task 7: Address */}
 				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', opacity: hasSubmittedAddress ? 0.5 : 1 }}>
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<div style={{ color: '#fff', fontSize: '0.9rem' }}>Submit Details</div>
-						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+2000 Marks</div>
+						<div style={{ color: '#ff4d4d', fontSize: '0.7rem' }}>+670 Marks</div>
 					</div>
 					{!hasSubmittedAddress ? (
 						<div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'column' }}>

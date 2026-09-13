@@ -14,7 +14,11 @@ const useSealEngine = create(
 			userMarks: 0,
 			foundHoods: [],
 			hasFoundHoods: false,
-			hasDoneTwitter: false,
+			hasJoinedDiscord: false,
+			hasLikedTweet: false,
+			hasReposted: false,
+			hasCommented: false,
+			hasMadeTweet: false,
 			hasSubmittedAddress: false,
 			savedWallet: '',
 			savedTwitter: '',
@@ -50,16 +54,36 @@ const useSealEngine = create(
 				};
 			}),
 			
-			completeTwitterTask: () => set((state) => ({ 
-				hasDoneTwitter: true, 
-				userMarks: state.userMarks + 2000 
+			completeDiscordTask: () => set((state) => ({ 
+				hasJoinedDiscord: true, 
+				userMarks: state.userMarks + 666 
+			})),
+
+			completeLikeTask: () => set((state) => ({ 
+				hasLikedTweet: true, 
+				userMarks: state.userMarks + 666 
+			})),
+
+			completeRepostTask: () => set((state) => ({ 
+				hasReposted: true, 
+				userMarks: state.userMarks + 666 
+			})),
+
+			completeCommentTask: () => set((state) => ({ 
+				hasCommented: true, 
+				userMarks: state.userMarks + 666 
+			})),
+
+			completeMakeTweetTask: () => set((state) => ({ 
+				hasMadeTweet: true, 
+				userMarks: state.userMarks + 666 
 			})),
 			
 			completeAddressTask: (wallet, twitter) => set((state) => ({ 
 				hasSubmittedAddress: true, 
 				savedWallet: wallet,
 				savedTwitter: twitter,
-				userMarks: state.userMarks + 2000 
+				userMarks: state.userMarks + 670 
 			})),
 
 			// Engine Interactions
@@ -109,7 +133,11 @@ const useSealEngine = create(
 				userMarks: state.userMarks,
 				foundHoods: state.foundHoods,
 				hasFoundHoods: state.hasFoundHoods,
-				hasDoneTwitter: state.hasDoneTwitter,
+				hasJoinedDiscord: state.hasJoinedDiscord,
+				hasLikedTweet: state.hasLikedTweet,
+				hasReposted: state.hasReposted,
+				hasCommented: state.hasCommented,
+				hasMadeTweet: state.hasMadeTweet,
 				hasSubmittedAddress: state.hasSubmittedAddress
 			}),
 		}
