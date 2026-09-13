@@ -115,7 +115,11 @@ const useSealEngine = create(
 					} else {
 						// Handle error (e.g. already broken)
 						console.error(result.error);
-						alert(`Failed to feed engine: ${result.error || 'Unknown error'}`);
+						if (result.error === 'The seal is already broken.') {
+							get().fetchGlobalState();
+						} else {
+							alert(`Failed to feed engine: ${result.error || 'Unknown error'}`);
+						}
 						set({ machineState: 'idle' });
 					}
 				} catch (error) {
