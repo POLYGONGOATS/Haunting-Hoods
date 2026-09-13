@@ -36,7 +36,7 @@ export default function EngineControls() {
 			<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid #333', paddingBottom: '0.75rem' }}>
 				<div>
 					<div style={{ fontSize: '0.5rem', color: '#555', letterSpacing: '0.1em', marginBottom: '0.25rem' }}>
-						GLOBAL MARKS FED
+						MARKS FED
 					</div>
 					<div style={{ fontSize: '1.4rem', color: '#e0e0e0', letterSpacing: '1px', fontVariantNumeric: 'tabular-nums' }}>
 						{totalMarksFed.toLocaleString()} <span style={{fontSize: '0.7rem', color: '#555'}}>/ {targetMarks.toLocaleString()}</span>

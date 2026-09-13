@@ -27,17 +27,13 @@ const useSealEngine = create(
 			// 'idle' | 'feeding' | 'dispensing'
 			machineState: 'idle',
 			
+			// Local engine state (no longer global)
+			totalMarksFed: 0,
+			targetMarks: 4444,
+			isBroken: false,
+
 			fetchGlobalState: async () => {
-				try {
-					const state = await getSealEngineState();
-					set({
-						totalMarksFed: state.total_marks_fed,
-						targetMarks: state.target_marks,
-						isBroken: state.is_broken
-					});
-				} catch (error) {
-					console.error("Failed to fetch seal engine state:", error);
-				}
+				// No longer fetching from global DB - it's an individual experience now.
 			},
 
 			// Task Actions
@@ -95,33 +91,26 @@ const useSealEngine = create(
 				set({ machineState: 'feeding' });
 				
 				try {
-					const result = await feedSealEngine(savedWallet || '0xUNKNOWN', savedTwitter || '@unknown', amount);
+					await feedSealEngine(savedWallet || '0xUNKNOWN', savedTwitter || '@unknown', amount);
 					
-					if (result.success) {
-						// Deduct marks locally since they've been fed
-						set(state => ({ 
-							userMarks: state.userMarks - amount,
-							totalMarksFed: result.total_marks_fed,
-							isBroken: result.is_broken
-						}));
+					// Deduct marks locally since they've been fed
+					set(state => ({ 
+						userMarks: state.userMarks - amount
+					}));
 
-						// Trigger dispense animation (or shake)
-						set({ machineState: 'dispensing' });
-						
-						// Auto-reset back to idle after sequence completes
-						setTimeout(() => {
-							set({ machineState: 'idle' });
-						}, 4000);
-					} else {
-						// Handle error (e.g. already broken)
-						console.error(result.error);
-						if (result.error === 'The seal is already broken.') {
-							get().fetchGlobalState();
-						} else {
-							alert(`Failed to feed engine: ${result.error || 'Unknown error'}`);
-						}
+					// Set machine to dispensing
+					set({ machineState: 'dispensing' });
+					
+					// Update local engine stats directly (since it's an individual experience)
+					set({ 
+						totalMarksFed: amount,
+						isBroken: amount >= 4444
+					});
+
+					// Auto-reset back to idle after sequence completes
+					setTimeout(() => {
 						set({ machineState: 'idle' });
-					}
+					}, 4000);
 				} catch (error) {
 					console.error("Error feeding engine:", error);
 					alert(`Database error: ${error.message || 'Please check your connection and Supabase permissions.'}`);
@@ -134,7 +123,7 @@ const useSealEngine = create(
 			}
 		}),
 		{
-			name: 'seal-engine-storage-v2',
+			name: 'seal-engine-storage-v3',
 			partialize: (state) => ({ 
 				userMarks: state.userMarks,
 				foundHoods: state.foundHoods,
@@ -144,7 +133,9 @@ const useSealEngine = create(
 				hasReposted: state.hasReposted,
 				hasCommented: state.hasCommented,
 				hasMadeTweet: state.hasMadeTweet,
-				hasSubmittedAddress: state.hasSubmittedAddress
+				hasSubmittedAddress: state.hasSubmittedAddress,
+				totalMarksFed: state.totalMarksFed,
+				isBroken: state.isBroken
 			}),
 		}
 	)
