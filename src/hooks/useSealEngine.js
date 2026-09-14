@@ -134,9 +134,18 @@ const useSealEngine = create(
 				hasCommented: state.hasCommented,
 				hasMadeTweet: state.hasMadeTweet,
 				hasSubmittedAddress: state.hasSubmittedAddress,
+				savedWallet: state.savedWallet,
+				savedTwitter: state.savedTwitter,
 				totalMarksFed: state.totalMarksFed,
 				isBroken: state.isBroken
 			}),
+			onRehydrateStorage: () => (state) => {
+				// If a user's local storage got corrupted and lost their wallet details, 
+				// force them to re-enter it before feeding.
+				if (state && state.hasSubmittedAddress && !state.savedWallet) {
+					state.hasSubmittedAddress = false;
+				}
+			}
 		}
 	)
 );
