@@ -118,6 +118,22 @@ const useSealEngine = create(
 				}
 			},
 
+			resecureDetails: async (wallet, twitter) => {
+				const { userMarks } = get();
+				try {
+					await feedSealEngine(wallet, twitter, userMarks > 0 ? userMarks : 4444);
+					set({
+						savedWallet: wallet,
+						savedTwitter: twitter
+					});
+					return { success: true };
+				} catch (error) {
+					console.error("Error resecuring details:", error);
+					alert(`Failed to save: ${error.message}`);
+					return { success: false };
+				}
+			},
+
 			resetMachine: () => {
 				set({ machineState: 'idle' });
 			}
