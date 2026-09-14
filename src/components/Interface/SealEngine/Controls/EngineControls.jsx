@@ -93,7 +93,7 @@ export default function EngineControls() {
 					<button 
 						disabled={hasLikedTweet}
 						onClick={() => {
-							window.open('https://x.com/intent/like?tweet_id=2099220934981022017', '_blank');
+							window.open('https://x.com/intent/like?tweet_id=2099574875677765825', '_blank');
 							completeLikeTask();
 						}}
 						style={{ background: hasLikedTweet ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasLikedTweet ? 'not-allowed' : 'pointer' }}
@@ -111,7 +111,7 @@ export default function EngineControls() {
 					<button 
 						disabled={hasReposted}
 						onClick={() => {
-							window.open('https://x.com/intent/retweet?tweet_id=2099220934981022017', '_blank');
+							window.open('https://x.com/intent/retweet?tweet_id=2099574875677765825', '_blank');
 							completeRepostTask();
 						}}
 						style={{ background: hasReposted ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasReposted ? 'not-allowed' : 'pointer' }}
@@ -129,7 +129,7 @@ export default function EngineControls() {
 					<button 
 						disabled={hasCommented}
 						onClick={() => {
-							window.open('https://x.com/intent/post?in_reply_to=2099220934981022017', '_blank');
+							window.open('https://x.com/intent/tweet?in_reply_to=2099574875677765825', '_blank');
 							completeCommentTask();
 						}}
 						style={{ background: hasCommented ? '#333' : 'transparent', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '0.5rem 1rem', cursor: hasCommented ? 'not-allowed' : 'pointer' }}
