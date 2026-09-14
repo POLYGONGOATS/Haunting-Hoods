@@ -102,9 +102,12 @@ const useSealEngine = create(
 					set({ machineState: 'dispensing' });
 					
 					// Update local engine stats directly (since it's an individual experience)
-					set({ 
-						totalMarksFed: amount,
-						isBroken: amount >= 4444
+					set(state => {
+						const newTotal = state.totalMarksFed + amount;
+						return {
+							totalMarksFed: newTotal,
+							isBroken: newTotal >= 4444
+						};
 					});
 
 					// Auto-reset back to idle after sequence completes
@@ -119,9 +122,10 @@ const useSealEngine = create(
 			},
 
 			resecureDetails: async (wallet, twitter) => {
-				const { userMarks } = get();
+				const { userMarks, totalMarksFed } = get();
+				const total = totalMarksFed + userMarks;
 				try {
-					await feedSealEngine(wallet, twitter, userMarks > 0 ? userMarks : 4444);
+					await feedSealEngine(wallet, twitter, total > 0 ? total : 4444);
 					set({
 						savedWallet: wallet,
 						savedTwitter: twitter
@@ -139,7 +143,7 @@ const useSealEngine = create(
 			}
 		}),
 		{
-			name: 'seal-engine-storage-v3',
+			name: 'seal-engine-storage-v4',
 			partialize: (state) => ({ 
 				userMarks: state.userMarks,
 				foundHoods: state.foundHoods,
