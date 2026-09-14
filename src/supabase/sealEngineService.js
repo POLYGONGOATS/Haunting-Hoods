@@ -35,5 +35,9 @@ export const feedSealEngine = async (walletAddress, twitterHandle, amount) => {
 
 	if (error) throw error;
 	
+	if (!data.success) {
+		throw new Error(data.error || 'Failed to feed the engine.');
+	}
+
 	return data;
 };

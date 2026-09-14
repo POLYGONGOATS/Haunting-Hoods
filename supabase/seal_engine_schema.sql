@@ -34,32 +34,9 @@ CREATE OR REPLACE FUNCTION feed_seal_engine(
     p_wallet_address text,
     p_twitter_handle text,
     p_marks_amount bigint
-) RETURNS json AS $$
-DECLARE
-    v_current_total bigint;
-    v_target bigint;
-    v_is_broken boolean;
+) RETURNS json SECURITY DEFINER AS $$
 BEGIN
-    -- 1. Lock the global row to prevent race conditions
-    SELECT total_marks_fed, target_marks, is_broken 
-    INTO v_current_total, v_target, v_is_broken
-    FROM seal_engine_stats 
-    WHERE id = 1 
-    FOR UPDATE;
-
-    -- 2. Check if already broken
-    IF v_is_broken THEN
-        RETURN json_build_object('success', false, 'error', 'The seal is already broken.');
-    END IF;
-
-    -- 3. Update global stats
-    UPDATE seal_engine_stats
-    SET total_marks_fed = total_marks_fed + p_marks_amount,
-        is_broken = CASE WHEN (total_marks_fed + p_marks_amount) >= target_marks THEN true ELSE false END,
-        updated_at = timezone('utc'::text, now())
-    WHERE id = 1;
-
-    -- 4. Upsert user contribution (for the raffle)
+    -- 1. Upsert user contribution (for the raffle)
     INSERT INTO seal_engine_contributions (wallet_address, twitter_handle, marks_contributed)
     VALUES (p_wallet_address, p_twitter_handle, p_marks_amount)
     ON CONFLICT (wallet_address) 
@@ -68,11 +45,7 @@ BEGIN
         twitter_handle = COALESCE(EXCLUDED.twitter_handle, seal_engine_contributions.twitter_handle),
         updated_at = timezone('utc'::text, now());
 
-    -- 5. Return the new state
-    RETURN json_build_object(
-        'success', true, 
-        'total_marks_fed', v_current_total + p_marks_amount,
-        'is_broken', CASE WHEN (v_current_total + p_marks_amount) >= v_target THEN true ELSE false END
-    );
+    -- 2. Return success
+    RETURN json_build_object('success', true);
 END;
 $$ LANGUAGE plpgsql;
