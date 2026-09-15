@@ -151,7 +151,7 @@ export default function RaffleSection() {
 					<div style={{ padding: '2.5rem 1.5rem', textAlign: 'center' }}>
 						<p style={{ color: '#9146FF', fontFamily: '"Space Mono", monospace', fontSize: '0.7rem', letterSpacing: '0.2em', margin: '0 0 0.6rem' }}>REWARD: [REDACTED]</p>
 						<p style={{ color: '#f5f5f5', fontSize: '2.5rem', margin: '0 0 0.5rem', letterSpacing: '0.05em' }}>
-							<CountdownTimer endTimeMs={Date.now() + 24 * 60 * 60 * 1000} /> {/* 24 hours from now */}
+							<CountdownTimer endTimeMs={1789549800000} /> {/* Fixed to Sept 16, 2026 14:30 IST */}
 						</p>
 						<p style={{ color: '#747474', fontSize: '0.82rem', letterSpacing: '0.08em', margin: 0 }}>Raffle ends soon. OG Pass required.</p>
 					</div>
