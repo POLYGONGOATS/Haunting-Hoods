@@ -131,35 +131,29 @@ export default function RaffleSection() {
 					</p>
 				</div>
 
-				<div className="wl-tasks-section" style={{ border: '1px solid rgba(145, 70, 255, 0.3)', marginBottom: '2rem', background: 'transparent' }}>
+				<div className="wl-tasks-section" style={{ border: '1px solid rgba(145, 70, 255, 0.3)', marginBottom: '2rem', background: 'transparent', opacity: 0.5 }}>
 					<div className="wl-tasks-header" style={{ color: '#9146FF', borderBottom: '1px solid rgba(145, 70, 255, 0.2)' }}>
-						<span>ACTIVE RAFFLES</span>
+						<span>OG RAFFLE 1 (ENDED)</span>
 					</div>
 					<div style={{ padding: '2.5rem 1.5rem', textAlign: 'center' }}>
 						<p style={{ color: '#9146FF', fontFamily: '"Space Mono", monospace', fontSize: '0.7rem', letterSpacing: '0.2em', margin: '0 0 0.6rem' }}>REWARD: [REDACTED]</p>
 						<p style={{ color: '#f5f5f5', fontSize: '2.5rem', margin: '0 0 0.5rem', letterSpacing: '0.05em' }}>
-							<CountdownTimer endTimeMs={1789131728000} /> {/* 24 hours from now */}
+							ENDED
+						</p>
+						<p style={{ color: '#747474', fontSize: '0.82rem', letterSpacing: '0.08em', margin: 0 }}>Raffle has ended.</p>
+					</div>
+				</div>
+
+				<div className="wl-tasks-section" style={{ border: '1px solid rgba(145, 70, 255, 0.3)', marginBottom: '2rem', background: 'transparent' }}>
+					<div className="wl-tasks-header" style={{ color: '#9146FF', borderBottom: '1px solid rgba(145, 70, 255, 0.2)' }}>
+						<span>OG RAFFLES 2 (ACTIVE)</span>
+					</div>
+					<div style={{ padding: '2.5rem 1.5rem', textAlign: 'center' }}>
+						<p style={{ color: '#9146FF', fontFamily: '"Space Mono", monospace', fontSize: '0.7rem', letterSpacing: '0.2em', margin: '0 0 0.6rem' }}>REWARD: [REDACTED]</p>
+						<p style={{ color: '#f5f5f5', fontSize: '2.5rem', margin: '0 0 0.5rem', letterSpacing: '0.05em' }}>
+							<CountdownTimer endTimeMs={Date.now() + 24 * 60 * 60 * 1000} /> {/* 24 hours from now */}
 						</p>
 						<p style={{ color: '#747474', fontSize: '0.82rem', letterSpacing: '0.08em', margin: 0 }}>Raffle ends soon. OG Pass required.</p>
-					</div>
-					
-					<div style={{ padding: '1rem', borderTop: '1px solid rgba(145, 70, 255, 0.2)', textAlign: 'center' }}>
-						<a href="/rewards" style={{ 
-							display: 'inline-block', 
-							padding: '0.8rem 1.5rem', 
-							background: 'rgba(145, 70, 255, 0.1)', 
-							color: '#9146FF', 
-							textDecoration: 'none', 
-							fontSize: '0.8rem', 
-							letterSpacing: '0.15em', 
-							border: '1px solid #9146FF',
-							transition: 'all 0.2s ease'
-						}}
-						onMouseEnter={(e) => { e.target.style.background = '#9146FF'; e.target.style.color = '#fff'; }}
-						onMouseLeave={(e) => { e.target.style.background = 'rgba(145, 70, 255, 0.1)'; e.target.style.color = '#9146FF'; }}
-						>
-							CHECK REWARDS <span>✦</span>
-						</a>
 					</div>
 				</div>
 
