@@ -49,7 +49,7 @@ export default function LandingPage() {
 					<a href="/lore">LORE</a>
 					<a href="/utility">UTILITY</a>
 					<a href="/whitelist">WHITELIST HUNT</a>
-					<a href="/rewards">OG RAFFLE ✦</a>
+					<a href="#og-raffle">OG RAFFLE ✦</a>
 					<a href="/the-seal-engine">SEAL ENGINE</a>
 				</nav>
 				<button className="menu-button" aria-label="Open menu">☰</button>
